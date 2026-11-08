@@ -288,13 +288,14 @@
   })();
 
   /* ---------- flowing word band ---------- */
-  const words = ["Бөгж", "Бугуйвч", "Arm cuff", "Зүүлт", "Ээмэг", "Гэдэсний зүүлт", "Хавчаар", "Захиалгаар", "Гараар урласан"];
+  const words = ["Бөгж", "Бугуйвч", "Arm cuff", "Зүүлт", "Ээмэг", "Бүсэлхийн гоёл", "Хавчаар", "Захиалгаар", "Гараар урласан"];
   const run = words.map((w) => `<span>${w}</span><i>✦</i>`).join("");
   $("#bandTrack").innerHTML = run + run;
 
   /* ---------- categories + grid ---------- */
   function renderCats() {
-    const all = [{ id: "all", name: "Бүгд" }, ...CATEGORIES];
+    // "Онцлох" (the pieces marked featured in admin) leads, every category follows, "Бүгд" comes last
+    const all = [...(PRODUCTS.some((p) => p.featured) ? [{ id: "featured", name: "Онцлох" }] : []), ...CATEGORIES, { id: "all", name: "Бүгд" }];
     $("#cats").innerHTML = all.map((c) => `<button class="cat" role="tab" type="button" data-cat="${c.id}" aria-selected="${c.id === activeCat}">${esc(c.name)}</button>`).join("");
   }
   $("#cats").addEventListener("click", (e) => { const b = e.target.closest(".cat"); if (!b) return; activeCat = b.dataset.cat; renderCats(); renderGrid(true); });
@@ -304,11 +305,11 @@
     : art(p.category, PRODUCTS.indexOf(p) + 2);
 
   function renderGrid(animate) {
-    const list = PRODUCTS.filter((p) => activeCat === "all" || p.category === activeCat);
+    const list = PRODUCTS.filter((p) => activeCat === "all" || (activeCat === "featured" ? p.featured : p.category === activeCat));
     $("#grid").innerHTML = list.length ? list.map((p, i) => `
       <button class="card" type="button" data-id="${esc(p.id)}" style="--d:${(i % 4) * 0.09}s">
         <span class="card-media">${media(p)}<span class="glare"></span>
-          ${p.isExample ? '<span class="tag">Жишээ</span>' : p.featured ? '<span class="tag feat">Шинэ</span>' : ""}
+          ${p.isExample ? '<span class="tag">Жишээ</span>' : ""}
           <svg class="card-orn" viewBox="0 0 410 140" aria-hidden="true"><use href="#ugalz"/></svg>
         </span>
         <span class="card-cat">${esc(catOf(p.category).name)}</span>
@@ -591,6 +592,10 @@
   api("/api/products")
     .then((d) => { LIVE = true; return d.products; })
     .catch(() => fetch("products.json").then((r) => r.json()).then((d) => d.products))
-    .then((list) => { PRODUCTS = list || []; renderGrid(); updateCount(); route(); })
+    .then((list) => {
+      PRODUCTS = list || [];
+      if (activeCat === "all" && PRODUCTS.some((p) => p.featured)) activeCat = "featured";
+      renderCats(); renderGrid(); updateCount(); route();
+    })
     .catch(() => { $("#grid").innerHTML = '<p class="empty">Бүтээгдэхүүн ачааллахад алдаа гарлаа. Хуудсаа дахин ачаална уу.</p>'; });
 })();

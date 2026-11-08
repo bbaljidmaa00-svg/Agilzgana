@@ -6,7 +6,7 @@ window.AGZ = (() => {
     { id: "cuff", name: "Arm cuff", size: "arm" },
     { id: "necklace", name: "Зүүлт", size: "neck" },
     { id: "earring", name: "Ээмэг", size: "none" },
-    { id: "belly", name: "Гэдэсний зүүлт", size: "waist" },
+    { id: "belly", name: "Бүсэлхийн гоёл", size: "waist" },
     { id: "clip", name: "Хавчаар", size: "none" }
   ];
   const INSTAGRAM = "agilzgana_";
