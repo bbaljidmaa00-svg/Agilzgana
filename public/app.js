@@ -46,13 +46,12 @@
     if (reduce || !g.animate) return;
     const vb = sym.viewBox.baseVal, cx = vb.x + vb.width / 2;
     const long = [], bits = [];
-    for (const p of parts) { const b = p.getBBox(); (b.width > 34 || b.height > 34 ? long : bits).push([p, b]); }
+    for (const p of parts) { const b = p.getBBox(); (b.width > 70 || b.height > 70 ? long : bits).push([p, b]); }
     for (const [p] of long) {
       const L = p.getTotalLength() + 2;
       p.style.strokeDasharray = `${L} ${L + 2}`;
-      p.style.strokeDashoffset = L; p.style.fillOpacity = 0;
-      p.animate([{ strokeDashoffset: L }, { strokeDashoffset: 0 }], { duration: 2400, delay: delay * 1000, easing: "cubic-bezier(.45,.05,.2,1)", fill: "forwards" });
-      p.animate([{ fillOpacity: 0 }, { fillOpacity: 1 }], { duration: 700, delay: (delay + 1.6) * 1000, easing: "ease-out", fill: "forwards" });
+      p.style.strokeDashoffset = L;
+      p.animate([{ strokeDashoffset: L }, { strokeDashoffset: 0 }], { duration: 2600, delay: delay * 1000, easing: "cubic-bezier(.45,.05,.2,1)", fill: "forwards" });
     }
     bits.sort((a, b) => Math.abs(a[1].x + a[1].width / 2 - cx) - Math.abs(b[1].x + b[1].width / 2 - cx));
     bits.forEach(([p], i) => {
@@ -70,14 +69,13 @@
     swirlIn($(".hero-ornament"), introOnNow ? 2.6 : 0.8);
   }
 
-  /* ---------- living угалз garden (canvas), calligraphic ink style ----------
-     Hand-designed pen flourishes grow out of the four corners: each stroke is a bezier lead-in that rolls into
-     a tangent spiral, filled as a tapered brush shape (thin, swelling, fine) with a ball terminal, with smaller
-     scrolls and teardrop leaves branching off. The corners are mirror images, so the frame reads as one drawn
-     border around the logo. Sparkles and dot trails twinkle in the margins; the flourishes breathe slightly. */
+  /* ---------- living угалз garden (canvas), hand-drawn line-art style ----------
+     Ribbons are drawn as two thin parallel lines that meet at the tip. Each ribbon integrates a curvature with
+     Gaussian "loop" bumps (one full cursive loop each) and a curl that tightens into a spiral at the end.
+     As they grow, doodles pop in around them: four-point sparkles, concentric rings, outline flowers and dots. */
   function Garden(canvas, opts = {}) {
     const ctx = canvas.getContext("2d");
-    let W = 0, H = 0, dpr = 1, groups = [], doodles = [], t0 = performance.now(), col = "#CC6690", col2 = "#B08647", visible = true;
+    let W = 0, H = 0, dpr = 1, ribbons = [], doodles = [], t0 = performance.now(), col = "#E2589E", col2 = "#C9971F", pointer = { x: -1e4, y: -1e4 }, visible = true;
     const night = !!opts.night;
     const TAU = Math.PI * 2;
     function recolor() {
@@ -85,127 +83,129 @@
       col2 = night ? "#E9D2A6" : css("--gold");
     }
     function rnd(a, b) { return a + Math.random() * (b - a); }
-    const bez = (p, t) => { const u = 1 - t; return [u * u * u * p[0][0] + 3 * u * u * t * p[1][0] + 3 * u * t * t * p[2][0] + t * t * t * p[3][0], u * u * u * p[0][1] + 3 * u * u * t * p[1][1] + 3 * u * t * t * p[2][1] + t * t * t * p[3][1]]; };
-    // centerline: chained cubic beziers, then a spiral tangent to the end (d = -1 turns left on screen, +1 right)
-    function line(segs, r, d, turns = 1.15) {
-      const pts = [];
-      segs.forEach((s, k) => { for (let i = k ? 1 : 0; i <= 30; i++) pts.push(bez(s, i / 30)); });
-      if (r) {
-        const [x0, y0] = pts[pts.length - 2], [x1, y1] = pts[pts.length - 1];
-        const th = Math.atan2(y1 - y0, x1 - x0), cx = x1 + r * Math.cos(th + d * Math.PI / 2), cy = y1 + r * Math.sin(th + d * Math.PI / 2);
-        const f0 = Math.atan2(y1 - cy, x1 - cx);
-        for (let i = 1; i <= 60; i++) { const t = i / 60, rr = r * (1 - 0.78 * t), f = f0 + d * TAU * turns * t; pts.push([cx + rr * Math.cos(f), cy + rr * Math.sin(f)]); }
-      }
-      // tangent angle and arc-length fraction for each point
-      let L = 0; const acc = [0];
-      for (let i = 1; i < pts.length; i++) { L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); acc.push(L); }
-      return pts.map((p, i) => { const a = pts[Math.min(i + 1, pts.length - 1)], b = pts[Math.max(i - 1, 0)]; return [p[0], p[1], Math.atan2(a[1] - b[1], a[0] - b[0]), acc[i] / L]; });
-    }
-    // one corner flourish in local units (origin at the corner, x inward, y inward); strokes start at `at` of the group's growth
-    function design() {
-      return [
-        { at: 0.00, w: 6.4, head: 0.2, pts: line([[[-8, 64], [70, 70], [140, 116], [150, 178]], [[150, 178], [156, 222], [128, 252], [100, 244]]], 20, -1) },
-        { at: 0.22, w: 4.0, head: 0.5, pts: line([[[62, 72], [104, 70], [150, 58], [172, 80]]], 13, 1), leaf: [62, 72, -0.9] },
-        { at: 0.45, w: 3.6, head: 0.5, pts: line([[[146, 150], [118, 140], [96, 150], [92, 172]]], 10, -1), leaf: [146, 150, 2.6] },
-        { at: 0.35, w: 3.0, head: 0.6, pts: line([[[-6, 26], [40, 28], [80, 22], [96, 4]]], 7, -1) },
-        { at: 0.55, w: 2.8, head: 0.5, pts: line([[[118, 92], [128, 112], [124, 128], [110, 132]]], 7, 1) }
-      ];
+    function ribbon(x, y, a, len, dir, delay, nLoops) {
+      const loops = [];
+      for (let k = 0; k < nLoops; k++) loops.push({ uc: (k + 1) / (nLoops + 1) * 0.78 + rnd(-0.04, 0.04), w: rnd(0.05, 0.065), d: Math.random() < 0.7 ? dir : -dir });
+      return { x, y, a, len, dir, delay, loops, c0: rnd(-0.0015, 0.002), phase: rnd(0, TAU), kmax: rnd(0.13, 0.17), gap: rnd(1.6, 2.2), dur: rnd(3.6, 4.6) };
     }
     function layout() {
       dpr = Math.min(2, devicePixelRatio || 1);
       const r = canvas.getBoundingClientRect();
       W = r.width; H = r.height;
       canvas.width = W * dpr; canvas.height = H * dpr;
-      const small = W < 640;
-      const s = small ? Math.min(0.62, W / 620) : Math.max(0.8, Math.min(1.5, Math.min(W / 1100, H / 700)));
-      const D = design();
-      // corners: [x, y, flipX, flipY, delay, scale]
-      const C = night
-        ? [[0, H, 1, -1, 0.0, s * 0.8], [W, H, -1, -1, 0.0, s * 0.8]]          // night: only the lower corners, the heading sits top-left
-        : [[0, H, 1, -1, 0.0, s], [W, H, -1, -1, 0.0, s], [0, 0, 1, 1, 0.35, s * (small ? 0.75 : 0.85)], [W, 0, -1, 1, 0.35, s * (small ? 0.75 : 0.85)]];
-      groups = C.map(([x, y, fx, fy, delay, sc]) => ({ x, y, fx, fy, delay, sc, D, dur: 4.2, ph: rnd(0, TAU) }));
+      const small = W < 640, m = Math.max(W, H), L = Math.max(300, m * (small ? 0.62 : 0.5));
+      const seeds = night ? [
+        [-10, H * 0.82, -0.45, 1, 2], [W + 10, H * 0.18, Math.PI + 0.35, -1, 2], [W * 0.12, H + 10, -1.25, -1, 1], [W + 10, H * 0.92, Math.PI + 0.6, 1, 1]
+      ] : [
+        [-10, H * 0.9, -0.5, 1, 2], [-10, H * (small ? 0.06 : 0.22), small ? 0.05 : 0.2, -1, 2], [W + 10, H * 0.86, Math.PI + 0.5, -1, 2],
+        [W + 10, H * (small ? 0.05 : 0.18), Math.PI - (small ? 0.05 : 0.15), 1, 2], [W * 0.5 - 40, H + 10, -Math.PI / 2 - 0.35, -1, 1], [W * 0.5 + 40, H + 10, -Math.PI / 2 + 0.35, 1, 1]
+      ];
+      ribbons = seeds.map(([x, y, a, d, nl], i) => ribbon(x, y, a, (i >= 4 ? L * 0.38 : small && (i === 1 || i === 3) ? L * 0.6 : L) * rnd(0.9, 1.1), d, i * 0.22, nl));
+      // doodles scattered around the edges, kept off the centre where the logo and text sit
       doodles = [];
-      const want = night ? (small ? 4 : 7) : (small ? 5 : 9);
-      const kinds = ["sparkle", "sparkle", "bigSparkle", "dot", "trail", "trail"];
+      const want = night ? (small ? 9 : 16) : (small ? 12 : 24);
+      const kinds = ["sparkle", "sparkle", "sparkle", "rings", "dot", "dot", "flower", "bigSparkle"];
       let guard = 0;
-      while (doodles.length < want * 2 && guard++ < 800) {
-        const x = night ? rnd(14, small ? 26 : 60) : rnd(16, W / 2 - (small ? 50 : 90)), y = night ? rnd(H * 0.15, H - 240 * s) : rnd(16, H - 16);
+      while (doodles.length < want && guard++ < 600) {
+        const x = rnd(16, W - 16), y = rnd(16, H - 16);
         const cx = Math.abs(x - W / 2) / (W / 2), cy = Math.abs(y - H / 2) / (H / 2);
-        if (!night && cx < (small ? 0.6 : 0.52) && cy < 0.66) continue;                       // keep the middle clear
-        if ((x < 260 * s && (y < 200 * s || y > H - 270 * s))) continue;             // and off the corner flourishes
-        if (doodles.some((d) => Math.hypot(d.x - x, d.y - y) < (small ? 50 : 80))) continue;
-        const kind = night ? ["sparkle", "dot", "trail"][Math.floor(Math.random() * 3)] : kinds[Math.floor(Math.random() * kinds.length)];
+        if (cx < (small ? 0.6 : 0.52) && cy < 0.66) continue;          // keep the middle clear
+        if (doodles.some((d) => Math.hypot(d.x - x, d.y - y) < (small ? 46 : 70))) continue;
+        const kind = kinds[Math.floor(Math.random() * kinds.length)];
         const base = small ? 0.75 : 1;
-        const rr = kind === "dot" ? rnd(1.8, 3) : kind === "trail" ? rnd(2.2, 3) : kind === "bigSparkle" ? rnd(18, 28) * base : rnd(6, 12) * base;
-        const d = { kind, x, y, r: rr, at: rnd(1.2, 4.6), rot: rnd(-0.25, 0.25), tw: rnd(0, TAU), sp: rnd(1.2, 2.4), gold: Math.random() < 0.35, ang: rnd(0, TAU) };
-        doodles.push(d, Object.assign({}, d, { x: W - x, rot: -d.rot, ang: Math.PI - d.ang }));
+        const r = kind === "dot" ? rnd(1.6, 3) : kind === "rings" ? rnd(9, 18) * base : kind === "flower" ? rnd(14, 22) * base : kind === "bigSparkle" ? rnd(20, 32) * base : rnd(6, 13) * base;
+        doodles.push({ kind, x, y, r, at: rnd(0.6, 4.2), rot: rnd(-0.3, 0.3), tw: rnd(0, TAU), sp: rnd(1.2, 2.4), gold: Math.random() < 0.3 });
       }
       recolor();
     }
-    function brush(P, w, head, grow) {
-      const Lp = [], Rp = [];
-      for (const [x, y, a, u] of P) {
-        if (u > grow) break;
-        let f = u < 0.3 ? head + (1 - head) * Math.sin(Math.PI / 2 * u / 0.3) : 0.12 + 0.88 * Math.cos(Math.PI / 2 * (u - 0.3) / 0.7);
-        f *= Math.min(1, (grow - u) * 12 + 0.2);                                   // the growing end stays pointed
-        const hw = Math.max(0.3, w / 2 * f), nx = -Math.sin(a), ny = Math.cos(a);
-        Lp.push(x + nx * hw, y + ny * hw); Rp.push(x - nx * hw, y - ny * hw);
+    // centerline: integrate curvature, with a gentle sway and a pointer bend
+    function path(T, time, grow) {
+      const step = 3, N = T.len / step, n = Math.max(2, Math.floor(N * grow));
+      const pts = new Array(n);
+      let x = T.x, y = T.y, a = T.a;
+      for (let i = 0; i < n; i++) {
+        const u = i / N;
+        let k = T.dir * (T.c0 + 0.006 * Math.sin(u * 5 + T.phase) + T.kmax * Math.pow(u, 3.6));
+        for (const L of T.loops) k += L.d * TAU / (L.w * 2.5066 * N) * Math.exp(-((u - L.uc) ** 2) / (2 * L.w * L.w));
+        a += k + Math.sin(time * 0.7 + T.delay * 5 + u * 3) * 0.0025 * u;
+        const dx = pointer.x - x, dy = pointer.y - y;
+        if (dx * dx + dy * dy < 20000) a += 0.01 * Math.sign(Math.sin(Math.atan2(dy, dx) - a));
+        x += Math.cos(a) * step; y += Math.sin(a) * step;
+        pts[i] = [x, y, a, u];
       }
-      if (Lp.length < 6) return;
-      ctx.beginPath(); ctx.moveTo(Lp[0], Lp[1]);
-      for (let i = 2; i < Lp.length; i += 2) ctx.lineTo(Lp[i], Lp[i + 1]);
-      for (let i = Rp.length - 2; i >= 0; i -= 2) ctx.lineTo(Rp[i], Rp[i + 1]);
-      ctx.closePath(); ctx.fill();
-      if (grow >= 1) { const e = P[P.length - 1]; ctx.beginPath(); ctx.arc(e[0], e[1], Math.max(1.3, w * 0.36), 0, TAU); ctx.fill(); }
+      return pts;
     }
-    function leaf(x, y, a, len, wd) {
-      ctx.save(); ctx.translate(x, y); ctx.rotate(a);
-      ctx.beginPath(); ctx.moveTo(0, 0);
-      ctx.bezierCurveTo(len * 0.3, wd, len * 0.8, wd * 0.6, len, 0);
-      ctx.bezierCurveTo(len * 0.8, -wd * 0.6, len * 0.3, -wd, 0, 0);
-      ctx.fill(); ctx.restore();
+    function strokeRibbon(pts, T, alpha) {
+      if (pts.length < 2) return;
+      ctx.lineCap = "round"; ctx.lineJoin = "round";
+      if (night) {        // faint moonlit glow under the lines
+        ctx.globalAlpha = alpha * 0.16; ctx.strokeStyle = col2; ctx.lineWidth = T.gap * 5;
+        ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (const p of pts) ctx.lineTo(p[0], p[1]); ctx.stroke();
+      }
+      ctx.globalAlpha = alpha; ctx.strokeStyle = col; ctx.lineWidth = W < 640 ? 1.1 : 1.3;
+      for (const side of [1, -1]) {
+        ctx.beginPath();
+        for (let i = 0; i < pts.length; i++) {
+          const [x, y, a, u] = pts[i];
+          const g = side * T.gap * (1 - Math.pow(Math.min(u, 1), 3)) + side * 0.15;
+          const px = x - Math.sin(a) * g, py = y + Math.cos(a) * g;
+          i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+        }
+        ctx.stroke();
+      }
     }
     function sparkle(r, long) {
-      const r2 = r * 0.16;
+      const r2 = r * 0.2;
       ctx.beginPath();
       for (let i = 0; i < 4; i++) {
         const a = -Math.PI / 2 + i * Math.PI / 2, rr = r * (i % 2 ? 1 : long);
-        const b = a + Math.PI / 2, bb = r * ((i + 1) % 2 ? 1 : long), m = a + Math.PI / 4;
-        if (!i) ctx.moveTo(Math.cos(a) * rr, Math.sin(a) * rr);
-        ctx.quadraticCurveTo(Math.cos(m) * r2, Math.sin(m) * r2, Math.cos(b) * bb, Math.sin(b) * bb);
+        const ax = Math.cos(a) * rr, ay = Math.sin(a) * rr;
+        const b = a + Math.PI / 2, bb = r * ((i + 1) % 2 ? 1 : long);
+        const bx = Math.cos(b) * bb, by = Math.sin(b) * bb;
+        const m = a + Math.PI / 4;
+        if (!i) ctx.moveTo(ax, ay);
+        ctx.quadraticCurveTo(Math.cos(m) * r2, Math.sin(m) * r2, bx, by);
       }
-      ctx.closePath(); ctx.fill();
+      ctx.closePath(); ctx.stroke();
     }
-    function drawGroup(G, time, grow) {
-      ctx.save();
-      ctx.translate(G.x, G.y); ctx.scale(G.fx * G.sc, G.fy * G.sc);
-      ctx.rotate(Math.sin(time * 0.5 + G.ph) * 0.006);                              // a slow breath
-      ctx.fillStyle = col; ctx.globalAlpha = night ? 0.85 : 0.92;
-      for (const S of G.D) {
-        const g = Math.max(0, Math.min(1, (grow - S.at) / (1 - S.at) * 1.15));
-        if (g <= 0) continue;
-        brush(S.pts, S.w, S.head, 1 - Math.pow(1 - g, 2));
-        if (S.leaf) { const k = Math.min(1, g * 4); leaf(S.leaf[0], S.leaf[1], S.leaf[2], 16 * k, 5 * k); }
+    function flower(r, p) {
+      const n = 5; ctx.beginPath();
+      for (let i = 0; i < n; i++) {
+        const a0 = i * TAU / n, a1 = a0 + TAU / n, am = (a0 + a1) / 2;
+        const x0 = Math.cos(a0) * r * 0.35, y0 = Math.sin(a0) * r * 0.35;
+        if (!i) ctx.moveTo(x0, y0);
+        ctx.bezierCurveTo(Math.cos(am - 0.55) * r * 1.25, Math.sin(am - 0.55) * r * 1.25, Math.cos(am + 0.55) * r * 1.25, Math.sin(am + 0.55) * r * 1.25, Math.cos(a1) * r * 0.35, Math.sin(a1) * r * 0.35);
       }
-      if (grow >= 1) {                                                              // a gold sparkle settles in the big curl
-        const tw = 0.85 + 0.15 * Math.sin(time * 2 + G.ph);
-        ctx.fillStyle = col2; ctx.translate(118, 214); ctx.scale(tw, tw); sparkle(8, 1.4);
-      }
-      ctx.restore();
+      ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, r * 0.14 * p, 0, TAU); ctx.stroke();
     }
-    function drawDoodle(d, time) {
+    function drawDoodle(d, time, alpha) {
       const t = time - (opts.startDelay || 0) - d.at;
       if (t <= 0 && !reduce) return;
       const g = reduce ? 1 : Math.min(1, t / 0.9);
-      const pop = reduce ? 1 : 1 + 2.2 * Math.pow(g - 1, 3) + 1.2 * Math.pow(g - 1, 2);
-      const tw = 0.85 + 0.15 * Math.sin(time * d.sp + d.tw);
+      const pop = reduce ? 1 : 1 + 2.2 * Math.pow(g - 1, 3) + 1.2 * Math.pow(g - 1, 2);    // ease-out-back
+      const tw = 0.86 + 0.14 * Math.sin(time * d.sp + d.tw);
       ctx.save(); ctx.translate(d.x, d.y); ctx.rotate(d.rot);
-      ctx.globalAlpha = Math.min(1, g * 1.6) * 0.85;
-      ctx.fillStyle = d.gold ? col2 : col;
-      if (d.kind === "sparkle" || d.kind === "bigSparkle") { ctx.scale(pop * tw, pop * tw); sparkle(d.r, d.kind === "bigSparkle" ? 1.6 : 1.15); }
-      else if (d.kind === "dot") { ctx.beginPath(); ctx.arc(0, 0, d.r * pop, 0, TAU); ctx.fill(); }
-      else for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(Math.cos(d.ang) * i * 9, Math.sin(d.ang) * i * 9, d.r * (1 - i * 0.28) * pop, 0, TAU); ctx.fill(); }
+      ctx.globalAlpha = alpha * Math.min(1, g * 1.6) * (night ? 0.85 : 0.9);
+      ctx.strokeStyle = d.gold ? col2 : col; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 1.2;
+      if (d.kind === "sparkle" || d.kind === "bigSparkle") { ctx.scale(pop * tw, pop * tw); sparkle(d.r, d.kind === "bigSparkle" ? 1.7 : 1); }
+      else if (d.kind === "dot") { ctx.beginPath(); ctx.arc(0, 0, d.r * pop * tw, 0, TAU); ctx.stroke(); }
+      else if (d.kind === "rings") {
+        for (const f of [1, 0.56, 0.16]) { ctx.beginPath(); ctx.arc(0, 0, d.r * f, -Math.PI / 2, -Math.PI / 2 + TAU * g); ctx.stroke(); }
+      } else if (d.kind === "flower") { ctx.rotate(time * 0.05 + d.tw); ctx.scale(pop, pop); flower(d.r, 1); }
       ctx.restore();
+    }
+    function drawRibbon(T, time, grow, alpha) {
+      const pts = path(T, time, grow);
+      strokeRibbon(pts, T, alpha);
+      // a small sparkle blooms at the spiral's heart when the ribbon finishes
+      if (grow > 0.97) {
+        const p = pts[pts.length - 1], s = Math.min(1, (grow - 0.97) / 0.03);
+        ctx.save(); ctx.translate(p[0], p[1]);
+        const tw = 0.8 + 0.2 * Math.sin(time * 2 + T.delay * 7);
+        ctx.scale(s * tw, s * tw); ctx.globalAlpha = alpha; ctx.strokeStyle = col2; ctx.lineWidth = 1.2;
+        sparkle(7, 1.3); ctx.restore();
+      }
     }
     function frame(now) {
       if (!visible) return;
@@ -213,16 +213,19 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
       const start = opts.startDelay || 0;
-      for (const G of groups) {
-        const g = reduce ? 1 : Math.max(0, Math.min(1, (time - start - G.delay) / G.dur));
-        if (g > 0) drawGroup(G, time, g);
+      for (const T of ribbons) {
+        const g = reduce ? 1 : Math.max(0, Math.min(1, (time - start - T.delay) / T.dur));
+        const e = 1 - Math.pow(1 - g, 2.4);
+        if (e > 0) drawRibbon(T, time, e, 1);
       }
-      for (const d of doodles) drawDoodle(d, time);
+      for (const d of doodles) drawDoodle(d, time, 1);
       ctx.globalAlpha = 1;
       if (!reduce) requestAnimationFrame(frame);
     }
     layout();
     let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { layout(); t0 = performance.now() - 99999; if (reduce) requestAnimationFrame(frame); }, 150); });
+    canvas.parentElement.addEventListener("pointermove", (e) => { const r = canvas.getBoundingClientRect(); pointer.x = e.clientX - r.left; pointer.y = e.clientY - r.top; });
+    canvas.parentElement.addEventListener("pointerleave", () => { pointer.x = pointer.y = -1e4; });
     if ("IntersectionObserver" in window) new IntersectionObserver(([en]) => {
       const was = visible; visible = en.isIntersecting; if (visible && !was) requestAnimationFrame(frame);
     }).observe(canvas);
@@ -270,7 +273,7 @@
       const H = document.documentElement.scrollHeight - innerHeight;
       const p = Math.min(1, Math.max(0, (scrollY + innerHeight * 0.5) / (H + innerHeight * 0.5)));
       path.style.strokeDashoffset = len * (1 - p);
-      $$(".divider, .frame-orn, .deco, .head-orn, .corner-orn").forEach((el) => {
+      $$(".divider, .frame-orn, .deco, .head-orn").forEach((el) => {
         const r = el.getBoundingClientRect();
         const q = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight * 0.6)));
         el.style.setProperty("--draw", (1 - q).toFixed(3));
