@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Agilzgana</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Agilzgana: гараар урласан, байгалиас сэдэвлэсэн бөгж, бугуйвч, зүүлт, ээмэг.">
+<meta property="og:title" content="Agilzgana">
+<meta property="og:description" content="Гараар урласан, байгалиас сэдэвлэсэн үнэт эдлэл">
+<meta property="og:image" content="images/banner.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Exo+2:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("agz-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body>
+<canvas id="pollen" aria-hidden="true"></canvas>
+
+<header class="nav" id="top">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="Agilzgana нүүр">Agilzgana</a>
+    <nav class="links" aria-label="Үндсэн цэс">
+      <a href="#collection">Цуглуулга</a>
+      <a href="#sizes">Хэмжээ</a>
+      <a href="#story">Тухай</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Өнгөний горим солих">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+      <button class="bag-btn" id="bagBtn" type="button">
+        Захиалга <span class="bag-count" id="bagCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <svg class="vines" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <path class="vine v1" d="M-20 420 C 160 300, 260 470, 420 360 S 640 180, 760 300 S 1000 420, 1220 210"/>
+      <path class="vine v2" d="M-20 140 C 120 60, 260 200, 360 120 S 560 20, 640 110"/>
+      <path class="vine v3" d="M700 520 C 760 420, 900 470, 950 380 S 1100 300, 1220 360"/>
+      <g class="curls">
+        <path class="vine v4" d="M420 360 c -30 -40, 20 -70, 40 -40 c 14 22, -16 36, -24 18"/>
+        <path class="vine v5" d="M760 300 c 20 -46, 76 -30, 64 6 c -9 24, -40 16, -34 -2"/>
+        <path class="vine v6" d="M360 120 c 30 -30, 70 0, 50 26 c -14 16, -34 4, -26 -10"/>
+      </g>
+    </svg>
+    <div class="hero-in">
+      <p class="eyebrow swirl-in" style="--d:.1s">Гар урлал · Байгалийн хэлбэр</p>
+      <h1 id="heroTitle" class="logotype" aria-label="Agilzgana">
+        <span class="logo-word">Agilzgana</span>
+      </h1>
+      <p class="lede swirl-in" style="--d:.9s">Навч, шүүдэр, эрвээхэйний хэлбэрээс сэдэвлэн гараар нэг бүрчлэн урласан үнэт эдлэл. Хэмжээгээ оруулаад, танд зориулж хийлгээрэй.</p>
+      <div class="hero-cta swirl-in" style="--d:1.1s">
+        <a class="btn primary" href="#collection">Цуглуулга үзэх</a>
+        <a class="btn ghost" href="#sizes">Хэмжээгээ олох</a>
+      </div>
+    </div>
+    <div class="orbit" aria-hidden="true">
+      <span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span>
+      <svg class="butterfly" viewBox="0 0 64 48" width="64" height="48"><g fill="none" stroke="currentColor" stroke-width="1.4"><path class="wing l" d="M32 24 C 20 2, 2 6, 6 20 C 8 28, 22 28, 32 24 Z M32 26 C 22 30, 10 40, 18 44 C 26 46, 30 36, 32 26 Z"/><path class="wing r" d="M32 24 C 44 2, 62 6, 58 20 C 56 28, 42 28, 32 24 Z M32 26 C 42 30, 54 40, 46 44 C 38 46, 34 36, 32 26 Z"/><path d="M32 14 V36"/></g></svg>
+    </div>
+  </section>
+
+  <!-- CATEGORIES + GRID -->
+  <section class="collection" id="collection" aria-labelledby="colTitle">
+    <div class="section-head">
+      <p class="eyebrow">Цуглуулга</p>
+      <h2 id="colTitle" class="h2">Ой, гол, нарнаас <em>урсаж ирсэн</em> хэлбэрүүд</h2>
+    </div>
+    <div class="cats" id="cats" role="tablist" aria-label="Төрөл"></div>
+    <div class="grid" id="grid"></div>
+    <p class="note" id="exampleNote" hidden>Одоо харагдаж буй бүтээгдэхүүн, үнэ нь жишээ. Жинхэнэ зураг, үнээ оруулахад солигдоно.</p>
+  </section>
+
+  <!-- SIZE GUIDE -->
+  <section class="sizes" id="sizes" aria-labelledby="sizeTitle">
+    <div class="section-head">
+      <p class="eyebrow">Хэмжээний заавар</p>
+      <h2 id="sizeTitle" class="h2">Хуруу, бугуйгаа <em>хэмжих</em> нь</h2>
+    </div>
+    <div class="size-wrap">
+      <ol class="steps">
+        <li><strong>Бөгж.</strong> Нимгэн утас эсвэл цаасан туузаар хурууныхаа хамгийн өргөн хэсгийг тойруулан ороож, давхцсан цэгт тэмдэглэнэ. Уртыг мм-ээр хэмжээд хүснэгтээс размераа олно. Таарч байгаа бөгжний дотор диаметр нь размер болдог.</li>
+        <li><strong>Бугуйвч.</strong> Бугуйн ясны дээгүүр тойргийг см-ээр хэмжинэ. Бид чөлөөтэй суухаар 1–1.5 см нэмж хийнэ.</li>
+        <li><strong>Arm cuff.</strong> Зүүх гэж буй хэсэг дээрээ (ихэвчлэн шууны дээд хэсэг) гарынхаа тойргийг см-ээр хэмжинэ.</li>
+        <li><strong>Гэдэсний зүүлт.</strong> Зүүх өндөр дээрээ бүсэлхийн тойргийг хэмжинэ. Хэр унжуулахаа тэмдэглэлд бичээрэй.</li>
+      </ol>
+      <div class="table-wrap">
+        <table class="size-table">
+          <caption>Бөгжний размер</caption>
+          <thead><tr><th scope="col">Размер</th><th scope="col">Дотор диаметр</th><th scope="col">Тойрог</th></tr></thead>
+          <tbody id="sizeRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story" id="story" aria-labelledby="storyTitle">
+    <figure class="story-photo">
+      <img src="images/banner.jpg" alt="Agilzgana брэндийн баннер: модны сүүдэрт, нуурын эрэг дээр амарч буй хүн" loading="lazy" width="1080" height="796">
+    </figure>
+    <div class="story-text">
+      <p class="eyebrow">Тухай</p>
+      <h2 id="storyTitle" class="h2">Модны сүүдэрт <em>төрсөн</em> чимэглэл</h2>
+      <p>Agilzgana гэдэг нь зугаалга, амралт гэсэн утгатай. Байгальд алхаж явахдаа анзаарсан жижиг зүйлс болох навчны судал, усны гялбаа, эрвээхэйн далавчийг утас, чулуу, гинжээр дахин бүтээдэг.</p>
+      <p>Бүтээл бүр гараар хийгдэх тул хоёр яг ижил бүтээл гарахгүй. Захиалга өгснөөс хойш ойролцоогоор 3–7 хоногт бэлэн болно.</p>
+      <a class="btn ghost" id="igLink" href="https://www.instagram.com/agilzgana_/" target="_blank" rel="noopener">Instagram дээр үзэх</a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <span class="brand small">Agilzgana</span>
+    <span>Гараар урласан үнэт эдлэл · Улаанбаатар</span>
+    <a href="https://www.instagram.com/agilzgana_/" target="_blank" rel="noopener">@agilzgana_</a>
+  </div>
+</footer>
+
+<!-- PRODUCT PANEL -->
+<div class="veil" id="veil" hidden></div>
+<section class="panel product-panel" id="productPanel" role="dialog" aria-modal="true" aria-labelledby="pName" hidden>
+  <button class="close" type="button" data-close aria-label="Хаах">×</button>
+  <div class="pp-grid">
+    <div class="pp-media" id="pMedia"></div>
+    <form class="pp-info" id="pForm" novalidate>
+      <p class="eyebrow" id="pCat"></p>
+      <h3 class="pp-name" id="pName"></h3>
+      <p class="pp-price" id="pPrice"></p>
+      <p class="pp-desc" id="pDesc"></p>
+      <p class="pp-mat" id="pMat"></p>
+      <div class="field" id="sizeField"></div>
+      <div class="field">
+        <label for="pQty">Тоо ширхэг</label>
+        <div class="qty">
+          <button type="button" id="qtyMinus" aria-label="Хасах">−</button>
+          <input id="pQty" type="number" min="1" max="20" value="1" inputmode="numeric">
+          <button type="button" id="qtyPlus" aria-label="Нэмэх">+</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="pNote">Нэмэлт хүсэлт <span class="opt">(заавал биш)</span></label>
+        <textarea id="pNote" rows="2" placeholder="Өнгө, чулуу, бэлгийн боодол гэх мэт"></textarea>
+      </div>
+      <p class="err" id="pErr" role="alert"></p>
+      <button class="btn primary wide" type="submit">Захиалгад нэмэх</button>
+    </form>
+  </div>
+</section>
+
+<!-- ORDER PANEL -->
+<aside class="panel bag-panel" id="bagPanel" role="dialog" aria-modal="true" aria-labelledby="bagTitle" hidden>
+  <button class="close" type="button" data-close aria-label="Хаах">×</button>
+  <h3 class="bag-title" id="bagTitle">Таны захиалга</h3>
+  <ul class="bag-list" id="bagList"></ul>
+  <p class="bag-empty" id="bagEmpty">Одоогоор хоосон байна. Цуглуулгаас сонгоод хэмжээгээ оруулаарай.</p>
+  <p class="bag-total" id="bagTotal"></p>
+  <form class="order-form" id="orderForm" novalidate>
+    <div class="field"><label for="oName">Нэр</label><input id="oName" autocomplete="name" required></div>
+    <div class="field"><label for="oPhone">Утас</label><input id="oPhone" type="tel" autocomplete="tel" inputmode="tel" required></div>
+    <div class="field"><label for="oIg">Instagram хаяг <span class="opt">(заавал биш)</span></label><input id="oIg" placeholder="@"></div>
+    <div class="field"><label for="oAddr">Хүргэлтийн хаяг эсвэл авах газар</label><textarea id="oAddr" rows="2" required></textarea></div>
+    <p class="err" id="oErr" role="alert"></p>
+    <button class="btn primary wide" type="submit">Захиалга бэлдэх</button>
+  </form>
+  <div class="sent" id="sentBox" hidden>
+    <p class="sent-lede">Захиалгын мэдээлэл бэлэн боллоо. Доорх текстийг хуулаад бидэнд Instagram-аар илгээнэ үү.</p>
+    <pre class="order-text" id="orderText"></pre>
+    <div class="sent-actions">
+      <button class="btn ghost" type="button" id="copyBtn">Текст хуулах</button>
+      <a class="btn primary" id="dmLink" href="https://ig.me/m/agilzgana_" target="_blank" rel="noopener">Instagram-аар илгээх</a>
+    </div>
+    <p class="hint" id="copyHint" role="status"></p>
+  </div>
+</aside>
+
+<script src="app.js"></script>
+</body>
+</html>
