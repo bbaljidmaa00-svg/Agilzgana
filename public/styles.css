@@ -330,7 +330,7 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 /* ---------- story ---------- */
 .story { max-width: 1280px; margin: 0 auto; padding-block: clamp(4rem, 8vw, 7rem); display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(2rem, 6vw, 6rem); align-items: center; }
 .story-photo { position: relative; margin: 0; transform: rotate(-2deg); }
-.story-photo img { border-radius: 999px 999px 24px 24px; box-shadow: var(--shadow); aspect-ratio: 4 / 4.2; object-fit: cover; object-position: 45% 50%; }
+.story-photo img { display: block; width: 100%; height: auto; border-radius: 999px 999px 24px 24px; box-shadow: var(--shadow); aspect-ratio: 4 / 4.2; object-fit: cover; object-position: 45% 50%; }
 .frame-orn { position: absolute; width: 60%; overflow: visible; z-index: 2; }
 .frame-orn.tl { top: -6%; left: 50%; transform: translateX(-50%); }
 .frame-orn.br { bottom: -7%; left: 50%; transform: translateX(-50%) scaleY(-1); }
