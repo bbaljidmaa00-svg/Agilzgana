@@ -29,6 +29,46 @@
     gardens.forEach((g) => g.recolor());
   });
 
+  /* ---------- swirl-in for the headline ornaments ----------
+     The symbol is copied inline so each stroke can be animated on its own: the long ribbons unroll smoothly from
+     the centre outward using their real lengths, then the sparkles, rings and dots pop in one after another. */
+  function swirlIn(svg, delay) {
+    const u = svg && svg.querySelector("use");
+    if (!u) return;
+    const sym = document.querySelector(u.getAttribute("href"));
+    if (!sym) return;
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("class", "orn");
+    for (const c of sym.children) { const k = c.cloneNode(true); k.removeAttribute("pathLength"); g.appendChild(k); }
+    svg.setAttribute("viewBox", sym.getAttribute("viewBox"));
+    u.replaceWith(g);
+    const parts = [...g.children];
+    if (reduce || !g.animate) return;
+    const vb = sym.viewBox.baseVal, cx = vb.x + vb.width / 2;
+    const long = [], bits = [];
+    for (const p of parts) { const b = p.getBBox(); (b.width > 70 || b.height > 70 ? long : bits).push([p, b]); }
+    for (const [p] of long) {
+      const L = p.getTotalLength() + 2;
+      p.style.strokeDasharray = `${L} ${L + 2}`;
+      p.style.strokeDashoffset = L;
+      p.animate([{ strokeDashoffset: L }, { strokeDashoffset: 0 }], { duration: 2600, delay: delay * 1000, easing: "cubic-bezier(.45,.05,.2,1)", fill: "forwards" });
+    }
+    bits.sort((a, b) => Math.abs(a[1].x + a[1].width / 2 - cx) - Math.abs(b[1].x + b[1].width / 2 - cx));
+    bits.forEach(([p], i) => {
+      p.style.transformBox = "fill-box"; p.style.transformOrigin = "center"; p.style.opacity = 0;
+      p.animate([
+        { opacity: 0, transform: "scale(0) rotate(-45deg)" },
+        { opacity: 1, transform: "scale(1.25) rotate(6deg)", offset: 0.6 },
+        { opacity: 1, transform: "scale(1) rotate(0deg)" }
+      ], { duration: 750, delay: (delay + 0.7 + i * 0.09) * 1000, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" });
+    });
+  }
+  {
+    const introOnNow = !document.documentElement.classList.contains("no-intro");
+    swirlIn($(".intro-ornament"), 0.1);
+    swirlIn($(".hero-ornament"), introOnNow ? 2.6 : 0.8);
+  }
+
   /* ---------- living угалз garden (canvas), hand-drawn line-art style ----------
      Ribbons are drawn as two thin parallel lines that meet at the tip. Each ribbon integrates a curvature with
      Gaussian "loop" bumps (one full cursive loop each) and a curl that tightens into a spiral at the end.
@@ -39,8 +79,8 @@
     const night = !!opts.night;
     const TAU = Math.PI * 2;
     function recolor() {
-      col = night ? "#FFF3D6" : css("--petal");
-      col2 = night ? "#FFE7A3" : css("--gold");
+      col = night ? "#F8ECE6" : css("--petal");
+      col2 = night ? "#E9D2A6" : css("--gold");
     }
     function rnd(a, b) { return a + Math.random() * (b - a); }
     function ribbon(x, y, a, len, dir, delay, nLoops) {

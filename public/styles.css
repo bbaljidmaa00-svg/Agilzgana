@@ -1,25 +1,25 @@
 /* Layout: a single flowing scroll. A living угалз garden grows in the hero, a vine draws itself down the page as you scroll,
    one deep-forest "night" section holds the bespoke order, glass panels bloom over for product + order. */
 :root {
-  --bg: #FCEFB4;          /* brand butter */
-  --bg-2: #FFF8DC;        /* cream surface */
-  --bg-3: #F6E39A;        /* deeper butter for bands */
-  --fg: #2A2719;
-  --muted: #6B6446;
-  --petal: #E2589E;       /* logotype pink */
-  --petal-ink: #AE2D74;   /* pink for small text */
-  --moss: #3E6B3A;
-  --gold: #C9971F;
-  --gold-hi: #F2D27A;
-  --glass: rgba(255, 251, 230, .66);
-  --glass-line: rgba(201, 151, 31, .35);
-  --line: rgba(62, 70, 30, .16);
-  --shadow: 0 40px 90px -40px rgba(90, 64, 0, .45);
-  --vine: rgba(62, 107, 58, .5);
-  --night: #0F1A13;       /* forest night section */
-  --night-2: #17271C;
-  --night-fg: #F5EDCB;
-  --night-muted: #B9B48F;
+  --bg: #FBF1EA;          /* blush ivory */
+  --bg-2: #FFF9F5;        /* milk surface */
+  --bg-3: #F4E1D8;        /* rosy sand for bands */
+  --fg: #3B2830;          /* plum brown ink */
+  --muted: #7A646D;
+  --petal: #CC6690;       /* dusty rose, the logotype */
+  --petal-ink: #A0416C;   /* rose for small text */
+  --moss: #7D8F6A;        /* sage */
+  --gold: #B08647;        /* champagne gold */
+  --gold-hi: #E9D2A6;
+  --glass: rgba(255, 250, 246, .7);
+  --glass-line: rgba(176, 134, 71, .3);
+  --line: rgba(59, 40, 48, .13);
+  --shadow: 0 40px 90px -40px rgba(90, 40, 60, .38);
+  --vine: rgba(204, 102, 144, .38);
+  --night: #2A1923;       /* deep plum section */
+  --night-2: #3D2533;
+  --night-fg: #F8ECE6;
+  --night-muted: #CDB5BF;
 
   --f-logo: "Great Vibes", "Snell Roundhand", cursive;
   --f-script: "Bad Script", "Segoe Script", cursive;          /* swirly script that carries Mongolian ө ү */
@@ -36,20 +36,20 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0C140E; --bg-2: #142017; --bg-3: #101B12; --fg: #F5EDCB; --muted: #B5B08C;
-    --petal: #FF8CC8; --petal-ink: #FFA6D3; --moss: #9FD48E; --gold: #E9C35B; --gold-hi: #FFE7A3;
-    --glass: rgba(20, 32, 22, .62); --glass-line: rgba(233, 195, 91, .3); --line: rgba(245, 237, 203, .14);
-    --shadow: 0 40px 90px -40px rgba(0, 0, 0, .8); --vine: rgba(159, 212, 142, .4);
-    --night: #070D09; --night-2: #0F1A12;
+    --bg: #1C1218; --bg-2: #271A22; --bg-3: #22161D; --fg: #F6E9E4; --muted: #BFA9B2;
+    --petal: #F29BBE; --petal-ink: #F7B3CF; --moss: #B5C7A2; --gold: #E2C08A; --gold-hi: #F3DDB3;
+    --glass: rgba(39, 26, 34, .64); --glass-line: rgba(226, 192, 138, .28); --line: rgba(246, 233, 228, .13);
+    --shadow: 0 40px 90px -40px rgba(0, 0, 0, .8); --vine: rgba(242, 155, 190, .32);
+    --night: #140C11; --night-2: #23141D;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0C140E; --bg-2: #142017; --bg-3: #101B12; --fg: #F5EDCB; --muted: #B5B08C;
-  --petal: #FF8CC8; --petal-ink: #FFA6D3; --moss: #9FD48E; --gold: #E9C35B; --gold-hi: #FFE7A3;
-  --glass: rgba(20, 32, 22, .62); --glass-line: rgba(233, 195, 91, .3); --line: rgba(245, 237, 203, .14);
-  --shadow: 0 40px 90px -40px rgba(0, 0, 0, .8); --vine: rgba(159, 212, 142, .4);
-  --night: #070D09; --night-2: #0F1A12;
+  --bg: #1C1218; --bg-2: #271A22; --bg-3: #22161D; --fg: #F6E9E4; --muted: #BFA9B2;
+  --petal: #F29BBE; --petal-ink: #F7B3CF; --moss: #B5C7A2; --gold: #E2C08A; --gold-hi: #F3DDB3;
+  --glass: rgba(39, 26, 34, .64); --glass-line: rgba(226, 192, 138, .28); --line: rgba(246, 233, 228, .13);
+  --shadow: 0 40px 90px -40px rgba(0, 0, 0, .8); --vine: rgba(242, 155, 190, .32);
+  --night: #140C11; --night-2: #23141D;
   color-scheme: dark;
 }
 
@@ -85,8 +85,8 @@ main, .nav, .foot { position: relative; z-index: 1; }
 }
 
 /* ---------- ornament (shared) ---------- */
-svg use { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.custom svg use { stroke: var(--gold-hi); }
+svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.custom svg use, .custom svg g.orn { stroke: var(--gold-hi); }
 /* hand-drawn line-art decorations that draw themselves as they scroll into view */
 .deco { position: absolute; z-index: 0; overflow: visible; pointer-events: none; opacity: .8; }
 .deco use { stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: var(--draw, 0); transition: stroke-dashoffset .25s linear; }
@@ -114,10 +114,11 @@ svg use { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke-linecap: r
   pointer-events: none; animation: intro-out 1s var(--ease-out) 2.3s forwards;
 }
 .intro-ornament { width: min(420px, 80vw); overflow: visible; }
-.intro-ornament use { stroke-width: 1.2; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.8s var(--ease) .15s forwards; filter: drop-shadow(0 0 8px rgba(242, 210, 122, .6)); }
+.intro-ornament use, .intro-ornament g.orn { stroke-width: 1.3; filter: drop-shadow(0 0 8px rgba(233, 210, 166, .6)); }
+.js .intro-ornament use, .js .hero-ornament use { opacity: 0; }
 .intro-word {
   font-family: var(--f-logo); font-size: clamp(3rem, 2rem + 6vw, 6rem); color: var(--gold-hi); margin-top: -1.2rem;
-  opacity: 0; animation: intro-word 1.2s var(--ease) 1s forwards; text-shadow: 0 0 30px rgba(242, 210, 122, .5);
+  opacity: 0; animation: intro-word 1.2s var(--ease) 1s forwards; text-shadow: 0 0 30px rgba(233, 210, 166, .5);
 }
 @keyframes intro-word { from { opacity: 0; filter: blur(12px); letter-spacing: .2em; } to { opacity: 1; filter: blur(0); letter-spacing: 0; } }
 @keyframes intro-out { to { clip-path: circle(0% at 50% 50%); opacity: 0; visibility: hidden; } }
@@ -190,8 +191,6 @@ svg use { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke-linecap: r
 @keyframes shimmer { 0%, 70% { background-position: 100% 0; } 100% { background-position: -50% 0; } }
 .hero-ornament { width: min(440px, 86vw); margin-top: -.4rem; overflow: visible; }
 .hero-ornament use { stroke-dasharray: 1; stroke-dashoffset: 0; }
-.js .hero-ornament use { stroke-dashoffset: 1; animation: draw 2.4s var(--ease) 1s forwards; }
-.js:not(.no-intro) .hero-ornament use { animation-delay: 3.1s; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
 .lede { max-width: 38rem; font-size: var(--step-1); line-height: 1.5; margin: 1.4rem 0 2.2rem; text-wrap: balance; }
 .lede .script { font-size: 1.02em; }
@@ -253,7 +252,7 @@ svg use { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke-linecap: r
   background: radial-gradient(120% 90% at 30% 15%, var(--bg-2), color-mix(in srgb, var(--moss) 16%, var(--bg)));
   transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transform-style: preserve-3d;
   transition: transform .6s var(--ease), box-shadow .6s var(--ease);
-  box-shadow: 0 30px 60px -40px rgba(60, 40, 0, .5);
+  box-shadow: 0 30px 60px -40px rgba(80, 40, 60, .4);
 }
 .card-media::before { content: ""; position: absolute; inset: 8px; border-radius: inherit; border: 1px solid var(--glass-line); z-index: 2; pointer-events: none; transition: inset .6s var(--ease); }
 .card:hover .card-media { box-shadow: 0 40px 70px -36px color-mix(in srgb, var(--petal) 60%, transparent); }
@@ -285,8 +284,8 @@ svg use { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke-linecap: r
   position: relative; isolation: isolate; overflow: hidden; margin-top: clamp(3rem, 6vw, 5rem);
   background: radial-gradient(80% 60% at 80% 0%, var(--night-2), var(--night));
   color: var(--night-fg); border-radius: clamp(28px, 5vw, 60px) clamp(28px, 5vw, 60px) 0 0;
-  --fg: var(--night-fg); --muted: var(--night-muted); --moss: #A8D898; --petal-ink: #FFA6D3; --line: rgba(245, 237, 203, .15);
-  --glass: rgba(18, 30, 21, .55); --glass-line: rgba(233, 195, 91, .28); --bg-2: rgba(255, 255, 255, .06);
+  --fg: var(--night-fg); --muted: var(--night-muted); --moss: #C3D3B0; --petal-ink: #F7B3CF; --line: rgba(248, 236, 230, .15);
+  --glass: rgba(48, 28, 40, .55); --glass-line: rgba(233, 210, 166, .28); --bg-2: rgba(255, 255, 255, .06);
 }
 .custom .garden { opacity: .9; }
 .custom-in { max-width: 1280px; margin: 0 auto; padding-block: clamp(4rem, 9vw, 8rem); display: grid; gap: 2.6rem; }
@@ -345,7 +344,7 @@ svg use { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke-linecap: r
 .foot-in { max-width: 1280px; margin: 0 auto; padding-block: 1.2rem calc(1.8rem + env(safe-area-inset-bottom, 0px)); display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: center; justify-content: space-between; font-family: var(--f-tech); font-size: .84rem; color: var(--muted); }
 
 /* ---------- panels ---------- */
-.veil { position: fixed; inset: 0; z-index: 40; background: color-mix(in srgb, #0c140e 45%, transparent); backdrop-filter: blur(6px); animation: fade .5s both; }
+.veil { position: fixed; inset: 0; z-index: 40; background: color-mix(in srgb, #1c1218 45%, transparent); backdrop-filter: blur(6px); animation: fade .5s both; }
 @keyframes fade { from { opacity: 0; } }
 .panel { position: fixed; z-index: 50; background: var(--glass); color: var(--fg); backdrop-filter: blur(28px) saturate(1.3); -webkit-backdrop-filter: blur(28px) saturate(1.3); border: 1px solid var(--glass-line); box-shadow: var(--shadow); overflow-y: auto; overscroll-behavior: contain; }
 .product-panel {
