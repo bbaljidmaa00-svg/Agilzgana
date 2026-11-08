@@ -22,7 +22,7 @@
   --night-muted: #CDB5BF;
 
   --f-logo: "Great Vibes", "Snell Roundhand", cursive;
-  --f-script: "Bad Script", "Segoe Script", cursive;          /* swirly script that carries Mongolian ө ү */
+  --f-script: "Cormorant Garamond", "Cormorant", Georgia, serif;   /* used in italic semibold: elegant accent that carries Mongolian ө ү */
   --f-serif: "Cormorant Garamond", "Cormorant", Georgia, serif;
   --f-tech: "Exo 2", "Trebuchet MS", system-ui, sans-serif;
 
@@ -98,9 +98,9 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 .collection .cats { justify-content: center; }
 .head-orn { width: min(300px, 70vw); margin: .2rem 0 -.6rem; overflow: visible; }
 .head-orn use { stroke-dasharray: 1; stroke-dashoffset: var(--draw, 0); }
-.d-col-l, .d-col-r { top: 2rem; height: clamp(240px, 26vw, 360px); opacity: .75; }
-.d-col-l { left: 0; }
-.d-col-r { right: 0; transform: scaleX(-1); }
+.d-col-l, .d-col-r { top: clamp(4rem, 8vw, 7rem); width: clamp(190px, 20vw, 300px); opacity: .85; }
+.d-col-l { left: 0; transform: scaleX(-1); }   /* both swans face the title */
+.d-col-r { right: 0; }
 .d-cus-l { right: clamp(170px, 22vw, 320px); top: 2rem; height: clamp(240px, 32vw, 420px); opacity: .55; }
 .d-cus-r { right: 1vw; bottom: 3rem; height: clamp(240px, 32vw, 440px); opacity: .5; transform: scaleX(-1); }
 .d-size { right: 0; top: 1rem; height: clamp(200px, 26vw, 340px); transform: scaleX(-1); opacity: .7; }
@@ -133,7 +133,7 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--petal); box-shadow: 0 0 0 4px color-mix(in srgb, var(--petal) 25%, transparent); animation: pulse 2.4s ease-in-out infinite; }
 @keyframes pulse { 50% { box-shadow: 0 0 0 9px color-mix(in srgb, var(--petal) 0%, transparent); } }
 .h2 { font-family: var(--f-serif); font-weight: 500; font-size: var(--step-2); line-height: 1.04; margin: 0; text-wrap: balance; max-width: 16ch; letter-spacing: -.01em; }
-.h2 em { font-family: var(--f-script); font-style: normal; font-weight: 400; color: var(--petal-ink); font-size: .82em; letter-spacing: 0; }
+.h2 em { font-family: var(--f-script); font-style: italic; font-weight: 600; color: var(--petal-ink); font-size: 1em; letter-spacing: 0; }
 .sub { max-width: 46ch; color: var(--muted); margin: 1rem 0 0; }
 .brand { font-family: var(--f-logo); font-size: 2.1rem; line-height: 1; color: var(--petal); text-decoration: none; padding-top: .2rem; }
 .brand.small { font-size: 1.7rem; }
@@ -203,8 +203,8 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 @keyframes cue { 0% { opacity: 0; transform: translateY(0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(14px); } }
 
 /* ---------- band ---------- */
-.band { position: relative; overflow: hidden; padding-block: 1.1rem; border-block: 1px solid var(--glass-line); background: var(--bg-3); }
-.band-track { display: flex; width: max-content; gap: 2.4rem; animation: band 42s linear infinite; font-family: var(--f-script); font-size: clamp(1.4rem, 1rem + 1.4vw, 2.1rem); color: var(--petal-ink); white-space: nowrap; align-items: center; }
+.band { position: relative; overflow: hidden; padding-block: 1.2rem; border-block: 1px solid var(--glass-line); background: var(--bg-3); }
+.band-track { display: flex; width: max-content; gap: 2.4rem; animation: band 42s linear infinite; font-family: var(--f-script); font-size: clamp(1.6rem, 1.1rem + 1.6vw, 2.5rem); font-weight: 700; font-style: italic; letter-spacing: .015em; color: var(--petal-ink); white-space: nowrap; align-items: center; }
 .band-track i { font-style: normal; color: var(--gold); font-size: .7em; }
 @keyframes band { to { transform: translateX(-50%); } }
 
@@ -421,7 +421,7 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 @media (max-width: 640px) {
   .deco { opacity: .32; }
   .d-cus-l { display: none; }
-  .d-col-l, .d-col-r { height: 170px; top: 1rem; opacity: .28; }
+  .d-col-l, .d-col-r { width: 120px; top: 1.2rem; opacity: .35; }
   .d-cus-l, .d-cus-r { opacity: .25; }
   .d-swan { opacity: .7; top: -4.5rem; right: 0; width: 140px; }
   .links { display: none; }
@@ -446,3 +446,10 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
   .intro { display: none; }
   .reveal-wait { opacity: 1; transform: none; filter: none; }
 }
+
+/* accent type: Cormorant Garamond italic semibold everywhere the script face is used */
+.script, .card-name, .process h3, .script-title, .size-table caption, .pp-name, .bag-title, .bag-item h4,
+.setup-title, .a-title, .a-card .nm, .ed-title { font-style: italic; font-weight: 600; }
+.script { font-size: 1.05em; }
+.card-name { font-size: 1.6rem; }
+.process h3 { font-size: 1.7rem; }
