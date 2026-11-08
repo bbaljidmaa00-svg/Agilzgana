@@ -85,11 +85,17 @@ main, .nav, .foot { position: relative; z-index: 1; }
 }
 
 /* ---------- ornament (shared) ---------- */
-svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.custom svg use, .custom svg g.orn { stroke: var(--gold-hi); }
+/* ink ornaments are filled brush shapes; drawing animates their outline first, then the ink fills in */
+svg use, svg g.orn { color: var(--petal); fill: currentColor; stroke: currentColor; stroke-width: .6; stroke-linecap: round; stroke-linejoin: round; }
+.custom svg use, .custom svg g.orn { color: var(--gold-hi); }
+.divider use, .frame-orn use, .head-orn use, .deco use, .corner-orn use { stroke-dasharray: 1; stroke-dashoffset: var(--draw, 0); fill-opacity: calc(1 - var(--draw, 0) * 2.2); transition: stroke-dashoffset .25s linear, fill-opacity .25s linear; }
+.corner-orn { position: absolute; width: clamp(70px, 8vw, 104px); pointer-events: none; overflow: visible; opacity: .9; }
+.custom .corner-orn use { color: var(--gold); }
+.corner-orn.c-tl { top: -26px; left: -26px; }
+.corner-orn.c-br { bottom: -26px; right: -26px; transform: rotate(180deg); }
+.custom-form { position: relative; }
 /* hand-drawn line-art decorations that draw themselves as they scroll into view */
 .deco { position: absolute; z-index: 0; overflow: visible; pointer-events: none; opacity: .8; }
-.deco use { stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: var(--draw, 0); transition: stroke-dashoffset .25s linear; }
 .collection, .sizes, .custom { overflow-x: clip; }
 .collection > :not(.deco), .sizes > :not(.deco), .custom-in { position: relative; z-index: 1; }
 /* collection title is centred and framed by a matching pair of blooms, with the flourish drawn under it */
@@ -97,13 +103,14 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 .collection .section-head .sub { margin-inline: auto; }
 .collection .cats { justify-content: center; }
 .head-orn { width: min(300px, 70vw); margin: .2rem 0 -.6rem; overflow: visible; }
-.head-orn use { stroke-dasharray: 1; stroke-dashoffset: var(--draw, 0); }
 .d-col-l, .d-col-r { top: clamp(4rem, 8vw, 7rem); width: clamp(190px, 20vw, 300px); opacity: .85; }
 .d-col-l { left: 0; transform: scaleX(-1); }   /* both swans face the title */
 .d-col-r { right: 0; }
 .d-cus-l { right: clamp(170px, 22vw, 320px); top: 2rem; height: clamp(240px, 32vw, 420px); opacity: .55; }
 .d-cus-r { right: 1vw; bottom: 3rem; height: clamp(240px, 32vw, 440px); opacity: .5; transform: scaleX(-1); }
 .d-size { right: 0; top: 1rem; height: clamp(200px, 26vw, 340px); transform: scaleX(-1); opacity: .7; }
+/* brush-stroke art (the swan) is filled, so it is revealed with a soft wipe instead of a stroke draw */
+.deco.ink { color: var(--petal); clip-path: inset(-5% calc(var(--draw, 0) * 105%) -5% -5%); transition: clip-path .3s linear; }
 .story-text { position: relative; }
 .d-swan { right: -1rem; top: clamp(-9rem, -10vw, -5rem); width: clamp(150px, 18vw, 230px); opacity: .9; }
 
@@ -114,7 +121,7 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
   pointer-events: none; animation: intro-out 1s var(--ease-out) 2.3s forwards;
 }
 .intro-ornament { width: min(420px, 80vw); overflow: visible; }
-.intro-ornament use, .intro-ornament g.orn { stroke-width: 1.3; filter: drop-shadow(0 0 8px rgba(233, 210, 166, .6)); }
+.intro-ornament use, .intro-ornament g.orn { filter: drop-shadow(0 0 8px rgba(233, 210, 166, .6)); }
 .js .intro-ornament use, .js .hero-ornament use { opacity: 0; }
 .intro-word {
   font-family: var(--f-logo); font-size: clamp(3rem, 2rem + 6vw, 6rem); color: var(--gold-hi); margin-top: -1.2rem;
@@ -174,7 +181,7 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 .hero-in { position: relative; max-width: 1280px; margin: 0 auto; display: grid; justify-items: center; text-align: center; }
 .logotype { margin: 0; line-height: .85; font-weight: 400; }
 .logo-word {
-  position: relative; display: inline-block; font-family: var(--f-logo); font-size: var(--step-hero);
+  position: relative; display: inline-block; font-family: var(--f-logo); font-size: min(var(--step-hero), 17vw);
   padding: .2em .35em .48em .3em; margin: -.08em 0 -.3em;   /* room for Parisienne swashes and descenders inside the text-clipped box */
   background: linear-gradient(100deg, var(--petal) 0%, var(--petal) 38%, var(--gold-hi) 48%, #fff 50%, var(--gold-hi) 52%, var(--petal) 62%, var(--petal) 100%);
   background-size: 300% 100%; background-position: 100% 0;
@@ -262,8 +269,8 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 .card-media .glare { position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, .45), transparent 45%); opacity: 0; transition: opacity .4s; }
 .card:hover .glare { opacity: 1; }
 .card-orn { position: absolute; left: 50%; bottom: -2px; width: 70%; transform: translateX(-50%); z-index: 3; overflow: visible; opacity: .9; }
-.card-orn use { stroke-width: 2; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.4s var(--ease); }
-.card:hover .card-orn use, .card:focus-visible .card-orn use { stroke-dashoffset: 0; }
+.card-orn use { stroke-dasharray: 1; stroke-dashoffset: 1; fill-opacity: 0; transition: stroke-dashoffset 1.4s var(--ease), fill-opacity .6s ease .8s; }
+.card:hover .card-orn use, .card:focus-visible .card-orn use { stroke-dashoffset: 0; fill-opacity: 1; }
 .card-row { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0 .4rem; }
 .card-name { font-family: var(--f-script); font-size: 1.5rem; line-height: 1.15; color: var(--fg); }
 .card-price { font-family: var(--f-tech); font-size: .9rem; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--muted); }
@@ -277,7 +284,6 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 .reveal-on { transition: opacity 1.2s var(--ease-out), transform 1.4s var(--ease-out), filter 1.2s var(--ease-out); transition-delay: var(--d, 0s); }
 
 .divider { display: block; width: min(440px, 84vw); margin: 0 auto; overflow: visible; }
-.divider use { stroke-dasharray: 1; stroke-dashoffset: var(--draw, 0); }
 
 /* ---------- custom (night section) ---------- */
 .custom {
@@ -312,7 +318,8 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; }
 .custom-done { text-align: center; display: grid; justify-items: center; gap: .6rem; }
 .done-ornament { width: 220px; overflow: visible; }
-.done-ornament use { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 2s var(--ease) forwards; }
+.done-ornament use { stroke-dasharray: 1; stroke-dashoffset: 1; fill-opacity: 0; animation: draw 2s var(--ease) forwards, ink .8s ease 1.4s forwards; }
+@keyframes ink { to { fill-opacity: 1; } }
 .script-title { font-family: var(--f-script); font-weight: 400; font-size: 2.4rem; margin: 0; color: var(--gold-hi); }
 .custom-done .order-text { text-align: left; width: 100%; }
 
@@ -334,7 +341,6 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 .frame-orn { position: absolute; width: 60%; overflow: visible; z-index: 2; }
 .frame-orn.tl { top: -6%; left: 50%; transform: translateX(-50%); }
 .frame-orn.br { bottom: -7%; left: 50%; transform: translateX(-50%) scaleY(-1); }
-.frame-orn use { stroke-width: 2; stroke-dasharray: 1; stroke-dashoffset: var(--draw, 0); }
 .story-text { display: grid; gap: .3rem; max-width: 34rem; }
 .story-text p { margin: 0 0 .8rem; }
 .story-text .btn { justify-self: start; margin-top: .6rem; }
