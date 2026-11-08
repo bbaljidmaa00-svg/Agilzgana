@@ -101,9 +101,10 @@
         [W + 10, H * (small ? 0.05 : 0.18), Math.PI - (small ? 0.05 : 0.15), 1, 2], [W * 0.5 - 40, H + 10, -Math.PI / 2 - 0.35, -1, 1], [W * 0.5 + 40, H + 10, -Math.PI / 2 + 0.35, 1, 1]
       ];
       ribbons = seeds.map(([x, y, a, d, nl], i) => ribbon(x, y, a, (i >= 4 ? L * 0.38 : small && (i === 1 || i === 3) ? L * 0.6 : L) * rnd(0.9, 1.1), d, i * 0.22, nl));
+      if (!night) ribbons = [];   // the hero corners carry the painted lily garland; keep the canvas to a few sparkles
       // doodles scattered around the edges, kept off the centre where the logo and text sit
       doodles = [];
-      const want = night ? (small ? 9 : 16) : (small ? 12 : 24);
+      const want = night ? (small ? 9 : 16) : (small ? 6 : 12);
       const kinds = ["sparkle", "sparkle", "sparkle", "rings", "dot", "dot", "flower", "bigSparkle"];
       let guard = 0;
       while (doodles.length < want && guard++ < 600) {

@@ -110,6 +110,13 @@ svg use, svg g.orn { fill: none; stroke: color-mix(in srgb, var(--moss) 85%, var
 .art { pointer-events: none; user-select: none; }
 .hero .art { position: absolute; z-index: -1; width: clamp(180px, 30vw, 460px); animation: art-in 2.4s var(--ease-out) .6s both; }
 .art-tl { top: 0; left: 0; } .art-br { bottom: 0; right: 0; transform: rotate(180deg); }
+.art-dark { display: none; }
+:root[data-theme="dark"] .art-dark { display: block; }
+:root[data-theme="dark"] .art-light { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .art-dark { display: block; }
+  :root:not([data-theme="light"]) .art-light { display: none; }
+}
 @keyframes art-in { from { opacity: 0; filter: blur(8px); } }
 .d-cus-l { right: clamp(240px, 26vw, 400px); top: 1rem; width: clamp(220px, 26vw, 380px); }
 .d-cus-r { right: 1vw; bottom: 2rem; width: clamp(130px, 14vw, 210px); }
@@ -482,3 +489,4 @@ svg use, svg g.orn { fill: none; stroke: color-mix(in srgb, var(--moss) 85%, var
 .card-name { font-size: 1.6rem; }
 .process h3 { font-size: 1.7rem; }
 @media (max-width: 860px) { .d-size { left: auto; right: -10px; top: 0; width: 96px; opacity: .45; } }
+@media (max-width: 600px) { .hero .art { width: 132px; } .hero .art-tl { top: -6px; left: -6px; } }
