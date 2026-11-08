@@ -111,6 +111,9 @@ svg use, svg g.orn { color: var(--petal); fill: currentColor; stroke: currentCol
 .d-size { right: 0; top: 1rem; height: clamp(200px, 26vw, 340px); transform: scaleX(-1); opacity: .7; }
 /* brush-stroke art (the swan) is filled, so it is revealed with a soft wipe instead of a stroke draw */
 .deco.ink { color: var(--petal); clip-path: inset(-5% calc(var(--draw, 0) * 105%) -5% -5%); transition: clip-path .3s linear; }
+/* collection: champagne-gold ink against the blush ground, so the pink stays for the words and products */
+.collection .deco.ink, .collection .deco.ink use, .collection .head-orn use { color: var(--gold); }
+.collection .section-head .h2 em { color: var(--gold); background: linear-gradient(100deg, color-mix(in srgb, var(--gold) 80%, var(--fg)), var(--gold) 45%, color-mix(in srgb, var(--gold) 60%, var(--gold-hi)) 60%, color-mix(in srgb, var(--gold) 80%, var(--fg))); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .story-text { position: relative; }
 .d-swan { right: -1rem; top: clamp(-9rem, -10vw, -5rem); width: clamp(150px, 18vw, 230px); opacity: .9; }
 
@@ -190,6 +193,8 @@ svg use, svg g.orn { color: var(--petal); fill: currentColor; stroke: currentCol
 }
 .js .logo-word { animation: write 2.6s var(--ease-out) .3s both, shimmer 7s ease-in-out 3s infinite; }
 .js:not(.no-intro) .logo-word { animation-delay: 2.5s, 5.5s; }
+/* Parisienne ends the last a with a blunt flick: finish it with an ink swash that curls into a ball */
+.logo-tail { position: absolute; left: 4.4712em; top: .4904em; width: .4615em; height: .269em; overflow: visible; fill: var(--petal); stroke: none; }
 @keyframes write {
   from { clip-path: inset(-30% 100% -30% 0); filter: blur(14px); transform: translateY(14px) rotate(-4deg) scale(.96); }
   60% { filter: blur(0) drop-shadow(0 10px 30px color-mix(in srgb, var(--petal) 35%, transparent)); }
