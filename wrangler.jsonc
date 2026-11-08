@@ -1,6 +1,6 @@
 {
   // Cloudflare Worker: serves ./public and answers /api/* from src/index.js.
-  // DB and IMAGES have no IDs on purpose: Cloudflare creates them on the first deploy and keeps them linked.
+  // DB and IMAGES point at the database and KV namespace created in the Cloudflare dashboard.
   "name": "agilzgana",
   "main": "src/index.js",
   "compatibility_date": "2026-10-01",
@@ -9,7 +9,7 @@
     "binding": "ASSETS",
     "run_worker_first": ["/api/*"]
   },
-  "d1_databases": [{ "binding": "DB" }],
-  "kv_namespaces": [{ "binding": "IMAGES" }],
+  "d1_databases": [{ "binding": "DB", "database_name": "agilzgana-db" }],
+  "kv_namespaces": [{ "binding": "IMAGES", "id": "c7829159ddc44d518bdd2147cad03004" }],
   "observability": { "enabled": true }
 }

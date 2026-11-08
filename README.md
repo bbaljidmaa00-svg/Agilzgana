@@ -8,7 +8,7 @@
 ## Cloudflare тохиргоо
 
 `wrangler.jsonc` дотор бүх тохиргоо бий. GitHub-д push хийхэд Cloudflare Workers Builds `npx wrangler deploy` ажиллуулж,
-D1 өгөгдлийн сан (`DB`), KV зургийн сан (`IMAGES`)-г **анх deploy хийхэд автоматаар үүсгэж** холбоно.
+dashboard дээр үүсгэсэн D1 `agilzgana-db` (`DB`), KV `agilzgana-images` (`IMAGES`)-тэй холбогдоно.
 
 Гараар хийх ганц алхам бол **админы нууц үг**:
 Workers & Pages → `agilzgana` → Settings → **Variables and Secrets → Add** → Type = *Secret*, Name = `ADMIN_PASSWORD`, Value = өөрийн нууц үг → Deploy.
