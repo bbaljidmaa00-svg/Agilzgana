@@ -92,8 +92,15 @@ svg use { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke-linecap: r
 .deco use { stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: var(--draw, 0); transition: stroke-dashoffset .25s linear; }
 .collection, .sizes, .custom { overflow-x: clip; }
 .collection > :not(.deco), .sizes > :not(.deco), .custom-in { position: relative; z-index: 1; }
-.d-col-l { right: clamp(160px, 20vw, 300px); top: 1rem; height: clamp(220px, 30vw, 380px); }
-.d-col-r { right: 0; top: 2.5rem; height: clamp(210px, 28vw, 360px); }
+/* collection title is centred and framed by a matching pair of blooms, with the flourish drawn under it */
+.collection .section-head { justify-items: center; text-align: center; max-width: 44rem; margin-inline: auto; }
+.collection .section-head .sub { margin-inline: auto; }
+.collection .cats { justify-content: center; }
+.head-orn { width: min(300px, 70vw); margin: .2rem 0 -.6rem; overflow: visible; }
+.head-orn use { stroke-dasharray: 1; stroke-dashoffset: var(--draw, 0); }
+.d-col-l, .d-col-r { top: 2rem; height: clamp(240px, 26vw, 360px); opacity: .75; }
+.d-col-l { left: 0; }
+.d-col-r { right: 0; transform: scaleX(-1); }
 .d-cus-l { right: clamp(170px, 22vw, 320px); top: 2rem; height: clamp(240px, 32vw, 420px); opacity: .55; }
 .d-cus-r { right: 1vw; bottom: 3rem; height: clamp(240px, 32vw, 440px); opacity: .5; transform: scaleX(-1); }
 .d-size { right: 0; top: 1rem; height: clamp(200px, 26vw, 340px); transform: scaleX(-1); opacity: .7; }
@@ -414,7 +421,8 @@ svg use { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke-linecap: r
 }
 @media (max-width: 640px) {
   .deco { opacity: .32; }
-  .d-col-l, .d-cus-l { display: none; }
+  .d-cus-l { display: none; }
+  .d-col-l, .d-col-r { height: 170px; top: 1rem; opacity: .28; }
   .d-cus-l, .d-cus-r { opacity: .25; }
   .d-swan { opacity: .7; top: -4.5rem; right: 0; width: 140px; }
   .links { display: none; }

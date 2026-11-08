@@ -206,9 +206,9 @@
     let len = 1;
     function build() {
       const W = main.clientWidth, H = main.scrollHeight;
-      if (W < 900) { path.setAttribute("d", ""); return; }      // no room in the gutter on small screens
+      if (W < 1520) { path.setAttribute("d", ""); return; }      // no room in the gutter on small screens
       svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-      const side = Math.max(30, (W - 1280) / 2 - 10);
+      const side = Math.max(30, (W - 1280) / 4);
       const top = Math.min(H * 0.12, 820);
       const pts = [];
       const xAt = (y) => side + Math.sin(y / 210) * 22 + Math.sin(y / 77) * 5;
@@ -217,7 +217,7 @@
         pts.push(`${pts.length ? "L" : "M"}${xAt(y).toFixed(1)} ${y.toFixed(1)}`);
         if (y >= curlNext) {
           // spiral curl that branches off the stem, then jump back to the stem
-          const x0 = xAt(y); let a = dir > 0 ? Math.PI : 0, r = 40;
+          const x0 = xAt(y); dir = -1; let a = 0, r = Math.min(34, side * 0.5);
           const cx = x0 + dir * r, cy = y;
           const spiral = [];
           for (let k = 0; k < 80; k++) { a += dir * 0.12; r *= 0.976; spiral.push(`L${(cx + Math.cos(a) * r).toFixed(1)} ${(cy + Math.sin(a) * r).toFixed(1)}`); }
@@ -233,7 +233,7 @@
       const H = document.documentElement.scrollHeight - innerHeight;
       const p = Math.min(1, Math.max(0, (scrollY + innerHeight * 0.5) / (H + innerHeight * 0.5)));
       path.style.strokeDashoffset = len * (1 - p);
-      $$(".divider, .frame-orn, .deco").forEach((el) => {
+      $$(".divider, .frame-orn, .deco, .head-orn").forEach((el) => {
         const r = el.getBoundingClientRect();
         const q = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight * 0.6)));
         el.style.setProperty("--draw", (1 - q).toFixed(3));
