@@ -55,6 +55,15 @@ export async function db(env) {
     stmts.push(env.DB.prepare("INSERT OR REPLACE INTO meta (k,v) VALUES ('seeded_v2','1')"));
     await env.DB.batch(stmts);
   }
+  // v1 of manual ordering: freeze today's order (featured first) into sort, since featured no longer jumps ahead
+  const ordered = await env.DB.prepare("SELECT v FROM meta WHERE k='sort_v1'").first();
+  if (!ordered) {
+    const { results } = await env.DB.prepare("SELECT id FROM products ORDER BY featured DESC, sort ASC, created_at DESC").all();
+    await env.DB.batch([
+      ...results.map((r, i) => env.DB.prepare("UPDATE products SET sort = ? WHERE id = ?").bind(i, r.id)),
+      env.DB.prepare("INSERT OR REPLACE INTO meta (k,v) VALUES ('sort_v1','1')")
+    ]);
+  }
   ready = true;
   return env.DB;
 }

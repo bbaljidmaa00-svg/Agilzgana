@@ -6,7 +6,7 @@ export async function onRequestGet({ request, env }) {
   const DB = await db(env);
   const all = new URL(request.url).searchParams.get("all") && (await isAdmin(request, env));
   const { results } = await DB.prepare(
-    `SELECT * FROM products ${all ? "" : "WHERE hidden = 0"} ORDER BY featured DESC, sort ASC, created_at DESC`
+    `SELECT * FROM products ${all ? "" : "WHERE hidden = 0"} ORDER BY sort ASC, created_at DESC`
   ).all();
   return json({ products: results.map(rowToProduct) }, 200, all ? {} : { "cache-control": "public, max-age=30" });
 }
@@ -27,4 +27,14 @@ export async function onRequestPost({ request, env }) {
   ).run();
   const row = await DB.prepare("SELECT * FROM products WHERE id = ?").bind(id).first();
   return json({ product: rowToProduct(row) }, 201);
+}
+
+// PUT /api/products (admin) { order: [id, id, ...] } -> the shop shows them in exactly this order
+export async function onRequestPut({ request, env }) {
+  const denied = await requireAdmin(request, env); if (denied) return denied;
+  const DB = await db(env);
+  const { order } = await request.json().catch(() => ({}));
+  if (!Array.isArray(order) || !order.length || order.length > 500 || !order.every((id) => typeof id === "string")) return bad("Дараалал буруу");
+  await DB.batch(order.map((id, i) => DB.prepare("UPDATE products SET sort = ? WHERE id = ?").bind(i, id)));
+  return json({ ok: true });
 }

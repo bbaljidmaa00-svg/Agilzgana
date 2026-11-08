@@ -92,7 +92,7 @@
     const b = (id, label, title = "") => `<button type="button" data-a="${id}" title="${esc(title)}">${label}</button>`;
     let h = "";
     if (kind === "text") h += b("bold", "<b>B</b>", "Тод") + b("italic", "<i>I</i>", "Налуу");
-    if (kind === "img") h += b("replace", "🖼 Солих", "Өөр зураг тавих");
+    if (kind === "img") h += b("replace", "🖼 Солих", "Өөр зураг тавих") + b("photo", "✎ Засах", "Тайрах, гэрэл, өнгө");
     h += b("smaller", "A−", "Жижигрүүлэх") + b("bigger", "A+", "Томруулах");
     if (r?.href != null) h += b("link", "🔗 Холбоос", "Дарахад хаашаа очих");
     h += b("addText", "+ Текст", "Доор нь шинэ мөр нэмэх") + b("addImg", "+ Зураг", "Доор нь зураг нэмэх");
@@ -132,6 +132,9 @@
       if (fresh) { select(fresh); document.execCommand("selectAll"); }
       return;
     }
+    if (a === "photo") return put(el.currentSrc || el.src, (url) => act(() => {
+      if (isNew(el)) item(key).src = url; else d.img[key] = url;
+    }));
     if (a === "replace" || a === "addImg") return pick(async (url) => {
       if (a === "replace") act(() => { d.img[key] = url; });
       else { const id = "n:" + Math.random().toString(36).slice(2, 9); act(() => d.add.splice(addIndex(key), 0, { id, after: key, kind: "img", src: url })); }
@@ -143,17 +146,20 @@
   /* ---------- pictures ---------- */
   function pick(done) {
     const inp = Object.assign(document.createElement("input"), { type: "file", accept: "image/*" });
-    inp.onchange = async () => {
-      const f = inp.files[0]; if (!f) return;
-      status("Зураг оруулж байна…");
-      try {
-        let url;
-        if (demo) { const blob = await A.shrink(f, 1000, 0.8); url = await new Promise((r) => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(blob); }); }
-        else url = (await A.upload(f, 2000)).url;
-        await done(url); status("Зураг орлоо. Хадгалахаа мартуузай.");
-      } catch (err) { status("Зураг оруулж чадсангүй: " + err.message); }
-    };
+    inp.onchange = () => { const f = inp.files[0]; if (f) put(f, done); };
     inp.click();
+  }
+  // open the photo editor (crop, light, warmth…), then upload what comes out
+  async function put(src, done) {
+    const blob = await window.AGZPhoto.edit(src);
+    if (!blob) return;
+    status("Зураг оруулж байна…");
+    try {
+      let url;
+      if (demo) { const small = await A.shrink(blob, 1000, 0.8); url = await new Promise((r) => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(small); }); }
+      else url = (await A.upload(blob, 2000)).url;
+      await done(url); status("Зураг орлоо. Хадгалахаа мартуузай.");
+    } catch (err) { status("Зураг оруулж чадсангүй: " + err.message); }
   }
 
   /* ---------- dock + design panel ---------- */

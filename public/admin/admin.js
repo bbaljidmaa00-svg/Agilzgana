@@ -78,7 +78,55 @@
         <span class="meta"><span>${esc(catOf(p.category).name)}</span><span>${AGZ.priceText(p.price)}</span></span>
       </button>`).join("") : `<p class="a-empty">Бүтээл олдсонгүй. "+ Шинэ бүтээл" дээр дарж эхнийхээ бүтээлийг нэмээрэй.</p>`;
   }
-  $("#prodGrid").addEventListener("click", (e) => { const c = e.target.closest(".a-card"); if (c) openEditor(products.find((p) => p.id === c.dataset.id)); });
+  $("#prodGrid").addEventListener("click", (e) => { if (arranging) return; const c = e.target.closest(".a-card"); if (c) openEditor(products.find((p) => p.id === c.dataset.id)); });
+
+  /* ---------- arrange: drag cards into the order the shop shows, like an Instagram grid ---------- */
+  let arranging = false, drag = null;
+  function setArranging(on) {
+    arranging = on;
+    if (on) { $("#fCat").value = ""; $("#fSearch").value = ""; renderProducts(); }
+    $("#prodGrid").classList.toggle("arranging", on);
+    $("#arrangeBar").hidden = !on; $("#arrangeBtn").hidden = on; $("#newBtn").hidden = on;
+    $(".a-filter").hidden = on;
+  }
+  $("#arrangeBtn").addEventListener("click", () => setArranging(true));
+  $("#arrangeCancel").addEventListener("click", () => { setArranging(false); renderProducts(); });
+  $("#arrangeSave").addEventListener("click", async () => {
+    const order = $$("#prodGrid .a-card").map((c) => c.dataset.id);
+    const btn = $("#arrangeSave"); btn.disabled = true;
+    try {
+      await api("/api/products", { method: "PUT", body: JSON.stringify({ order }) });
+      products.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+      setArranging(false); renderProducts(); toast("Дараалал хадгалагдлаа");
+    } catch (err) { authFail(err); }
+    btn.disabled = false;
+  });
+  const grid = $("#prodGrid");
+  grid.addEventListener("pointerdown", (e) => {
+    if (!arranging) return;
+    const card = e.target.closest(".a-card"); if (!card) return;
+    e.preventDefault(); card.setPointerCapture(e.pointerId);
+    drag = { card, y: e.clientY }; card.classList.add("dragging");
+  });
+  grid.addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    drag.y = e.clientY;
+    const under = document.elementFromPoint(e.clientX, e.clientY)?.closest(".a-card");
+    if (!under || under === drag.card) return;
+    const cards = $$(".a-card", grid), from = cards.indexOf(drag.card), to = cards.indexOf(under);
+    const before = new Map(cards.map((c) => [c, c.getBoundingClientRect()]));
+    under[from < to ? "after" : "before"](drag.card);
+    cards.forEach((c) => { // slide the others into their new places
+      const a = before.get(c), b = c.getBoundingClientRect(), dx = a.left - b.left, dy = a.top - b.top;
+      if (dx || dy) c.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }], { duration: 220, easing: "ease-out" });
+    });
+  });
+  const endDrag = () => { if (drag) drag.card.classList.remove("dragging"); drag = null; };
+  grid.addEventListener("pointerup", endDrag); grid.addEventListener("pointercancel", endDrag);
+  (function edgeScroll() { // scroll the page while holding a card near the top or bottom edge
+    if (drag) { const m = 80; if (drag.y < m) scrollBy(0, -10); else if (drag.y > innerHeight - m) scrollBy(0, 10); }
+    requestAnimationFrame(edgeScroll);
+  })();
   $("#newBtn").addEventListener("click", () => openEditor(null));
 
   /* ---------- editor ---------- */
@@ -114,6 +162,7 @@
         <span class="tools">
           ${i > 0 ? `<button type="button" data-act="left" data-i="${i}" aria-label="Урагш">‹</button>` : ""}
           ${i < images.length - 1 ? `<button type="button" data-act="right" data-i="${i}" aria-label="Хойш">›</button>` : ""}
+          ${im.url ? `<button type="button" data-act="edit" data-i="${i}" aria-label="Зураг засах">✎</button>` : ""}
           <button type="button" data-act="del" data-i="${i}" aria-label="Зураг хасах">×</button>
         </span>
       </div>`).join("");
@@ -121,14 +170,33 @@
   $("#edImages").addEventListener("click", (e) => {
     const b = e.target.closest("button[data-act]"); if (!b) return;
     const i = +b.dataset.i;
+    if (b.dataset.act === "edit") return editImage(i);
     if (b.dataset.act === "del") images.splice(i, 1);
     if (b.dataset.act === "left") [images[i - 1], images[i]] = [images[i], images[i - 1]];
     if (b.dataset.act === "right") [images[i + 1], images[i]] = [images[i], images[i + 1]];
     drawImages();
   });
+  // crop / light / warmth an image that is already in the list, then swap in the new upload
+  async function editImage(i) {
+    const im = images[i]; if (!im?.url) return;
+    const blob = await window.AGZPhoto.edit(im.url, { aspect: "4:5" }); if (!blob) return;
+    await uploadInto(im, blob, true);
+  }
+  async function uploadInto(im, blob, replacing) {
+    im.preview = URL.createObjectURL(blob); const old = im.url; if (replacing) im.url = null; drawImages();
+    pending++; $("#upStatus").textContent = `Зураг оруулж байна… (${pending})`;
+    try { im.url = (await upload(blob, 1800)).url; }
+    catch (err) { if (replacing) im.url = old; else images.splice(images.indexOf(im), 1); if (!authFail(err)) $("#edErr").textContent = err.message; }
+    pending--; $("#upStatus").textContent = pending ? `Зураг оруулж байна… (${pending})` : "Зургууд орлоо.";
+    drawImages();
+  }
   async function addFiles(files) {
     const list = [...files].filter((f) => f.type.startsWith("image/")).slice(0, 12 - images.length);
     if (!list.length) return;
+    if (list.length === 1) { // one picture: open the photo editor first (4:5 like the shop cards)
+      const blob = await window.AGZPhoto.edit(list[0], { aspect: "4:5" }); if (!blob) return;
+      const im = {}; images.push(im); return uploadInto(im, blob, false);
+    }
     for (const f of list) {
       const im = { preview: URL.createObjectURL(f) }; images.push(im); drawImages();
       pending++; $("#upStatus").textContent = `Зураг оруулж байна… (${pending})`;

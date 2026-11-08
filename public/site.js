@@ -195,7 +195,9 @@ window.AGZSite = (() => {
     if (editorLoading) return; editorLoading = true;
     const base = document.querySelector('script[src$="site.js"]').getAttribute("src").replace(/site\.js$/, "");
     document.head.appendChild(Object.assign(document.createElement("link"), { rel: "stylesheet", href: base + "edit.css" }));
-    document.body.appendChild(Object.assign(document.createElement("script"), { src: base + "edit.js" }));
+    const photo = Object.assign(document.createElement("script"), { src: base + "photo.js" });
+    photo.onload = () => document.body.appendChild(Object.assign(document.createElement("script"), { src: base + "edit.js" }));
+    document.body.appendChild(photo);
   }
 
   boot(); // loaded at the end of <body>, before app.js, so the page is complete and nothing has animated yet

@@ -101,3 +101,14 @@ body.admin { min-height: 100vh; }
 }
 .a-top .site-edit { padding: .5rem 1rem; font-size: .74rem; }
 @media (max-width: 560px) { .a-top .site-edit { padding: .45rem .7rem; font-size: .66rem; } }
+.a-actions { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: flex-end; }
+.arrange-bar { position: sticky; top: 70px; z-index: 15; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin: 0 0 1rem; padding: .8rem 1rem; border-radius: 18px; background: color-mix(in srgb, var(--petal) 14%, var(--bg-2)); border: 1px solid color-mix(in srgb, var(--petal) 40%, transparent); }
+.arrange-bar p { margin: 0; font-family: var(--f-tech); font-size: .86rem; }
+.arrange-bar div { display: flex; gap: .5rem; }
+.a-grid.arranging .a-card { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; animation: wiggle .5s ease-in-out infinite alternate; }
+.a-grid.arranging .a-card:nth-child(2n) { animation-delay: -.25s; }
+.a-grid.arranging .a-card:hover { transform: none; }
+.a-grid.arranging .a-card img { pointer-events: none; -webkit-user-drag: none; }
+.a-grid .a-card.dragging { cursor: grabbing; animation: none; z-index: 5; box-shadow: 0 20px 40px -12px rgba(0,0,0,.35); outline: 2px solid var(--petal); scale: 1.04; }
+@keyframes wiggle { from { rotate: -.6deg; } to { rotate: .6deg; } }
+@media (prefers-reduced-motion: reduce) { .a-grid.arranging .a-card { animation: none; } }
