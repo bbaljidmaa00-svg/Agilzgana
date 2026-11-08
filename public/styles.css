@@ -85,7 +85,20 @@ main, .nav, .foot { position: relative; z-index: 1; }
 }
 
 /* ---------- ornament (shared) ---------- */
-svg use { fill: none; stroke: url(#goldGrad); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+svg use { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.custom svg use { stroke: var(--gold-hi); }
+/* hand-drawn line-art decorations that draw themselves as they scroll into view */
+.deco { position: absolute; z-index: 0; overflow: visible; pointer-events: none; opacity: .8; }
+.deco use { stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: var(--draw, 0); transition: stroke-dashoffset .25s linear; }
+.collection, .sizes, .custom { overflow-x: clip; }
+.collection > :not(.deco), .sizes > :not(.deco), .custom-in { position: relative; z-index: 1; }
+.d-col-l { right: clamp(160px, 20vw, 300px); top: 1rem; height: clamp(220px, 30vw, 380px); }
+.d-col-r { right: 0; top: 2.5rem; height: clamp(210px, 28vw, 360px); }
+.d-cus-l { right: clamp(170px, 22vw, 320px); top: 2rem; height: clamp(240px, 32vw, 420px); opacity: .55; }
+.d-cus-r { right: 1vw; bottom: 3rem; height: clamp(240px, 32vw, 440px); opacity: .5; transform: scaleX(-1); }
+.d-size { right: 0; top: 1rem; height: clamp(200px, 26vw, 340px); transform: scaleX(-1); opacity: .7; }
+.story-text { position: relative; }
+.d-swan { right: -1rem; top: clamp(-9rem, -10vw, -5rem); width: clamp(150px, 18vw, 230px); opacity: .9; }
 
 /* ---------- intro ---------- */
 .intro {
@@ -257,7 +270,7 @@ svg use { fill: none; stroke: url(#goldGrad); stroke-width: 1.6; stroke-linecap:
 .reveal-wait { opacity: .25; transform: translateY(40px) rotate(-2deg) scale(.97); filter: blur(6px); }
 .reveal-on { transition: opacity 1.2s var(--ease-out), transform 1.4s var(--ease-out), filter 1.2s var(--ease-out); transition-delay: var(--d, 0s); }
 
-.divider { display: block; width: min(360px, 70vw); margin: 0 auto; overflow: visible; }
+.divider { display: block; width: min(440px, 84vw); margin: 0 auto; overflow: visible; }
 .divider use { stroke-dasharray: 1; stroke-dashoffset: var(--draw, 0); }
 
 /* ---------- custom (night section) ---------- */
@@ -400,6 +413,10 @@ svg use { fill: none; stroke: url(#goldGrad); stroke-width: 1.6; stroke-linecap:
   .process { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) {
+  .deco { opacity: .32; }
+  .d-col-l, .d-cus-l { display: none; }
+  .d-cus-l, .d-cus-r { opacity: .25; }
+  .d-swan { opacity: .7; top: -4.5rem; right: 0; width: 140px; }
   .links { display: none; }
   .nav-tools { margin-left: auto; }
   .bag-label { display: none; }

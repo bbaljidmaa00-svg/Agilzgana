@@ -80,7 +80,7 @@ window.AGZ = (() => {
         <radialGradient id="${id}h" cx=".5" cy=".55" r=".5"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
       </defs>
       <circle cx="${120 + r(1) * 160}" cy="${150 + r(2) * 80}" r="${150 + r(3) * 40}" fill="url(#${id}h)"/>
-      <g transform="translate(200 ${420 + r(4) * 20}) scale(.7)" opacity=".28" fill="none" stroke="var(--gold)" stroke-width="2"><use href="#ugalzHalf"/><use href="#ugalzHalf" transform="scale(-1 1)"/></g>
+      <use href="#ugalz" x="40" y="${372 + r(4) * 20}" width="320" height="110" opacity=".3" style="stroke:var(--petal);stroke-width:2.4"/>
       ${shapes[cat] || shapes.ring}
       <text x="${290 + r(9) * 60}" y="${80 + r(10) * 50}" fill="var(--gold)" font-size="26">✦</text>
       <text x="${50 + r(11) * 40}" y="${150 + r(12) * 60}" fill="var(--gold)" font-size="14" opacity=".7">✦</text>
