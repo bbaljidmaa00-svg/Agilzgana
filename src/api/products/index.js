@@ -1,4 +1,4 @@
-import { db, json, bad, rowToProduct, requireAdmin, isAdmin, cleanProduct, slugify } from "../../../lib/core.js";
+import { db, json, bad, rowToProduct, requireAdmin, isAdmin, cleanProduct, slugify } from "../../lib/core.js";
 
 // GET /api/products         -> visible products (public)
 // GET /api/products?all=1   -> every product, including hidden (admin)

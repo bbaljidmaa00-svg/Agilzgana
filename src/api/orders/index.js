@@ -1,4 +1,4 @@
-import { db, json, bad, requireAdmin, safeJSON } from "../../../lib/core.js";
+import { db, json, bad, requireAdmin, safeJSON } from "../../lib/core.js";
 
 const s = (v, n) => String(v ?? "").trim().slice(0, n);
 

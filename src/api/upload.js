@@ -1,4 +1,4 @@
-import { json, bad, isAdmin } from "../../lib/core.js";
+import { json, bad, isAdmin } from "../lib/core.js";
 
 // POST /api/upload  body = image bytes, content-type image/*
 // Admin uploads go under p/ (product photos, 6 MB max).

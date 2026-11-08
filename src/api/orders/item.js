@@ -1,4 +1,4 @@
-import { db, json, bad, requireAdmin } from "../../../lib/core.js";
+import { db, json, bad, requireAdmin } from "../../lib/core.js";
 const STATUSES = ["new", "making", "ready", "done", "cancelled"];
 
 export async function onRequestPatch({ request, params, env }) {

@@ -1,21 +1,17 @@
 # Agilzgana вэбсайт
 
-Гараар, захиалгаар урладаг үнэт эдлэлийн сайт. Cloudflare Pages дээр ажиллана:
-- **Сайт** (`index.html`, `styles.css`, `app.js`, `shared.js`): ургадаг угалз, кино шиг нээлт, цуглуулга, хэмжээ оруулах, захиалга, "өөрийн санаагаар захиалах" форм.
-- **Админ** (`/admin/`): бүтээл нэмэх, засах, нуух, устгах, зураг оруулах, ирсэн захиалгыг харах, төлөв солих.
-- **Сервер** (`functions/api/*`, `lib/*`): Cloudflare Pages Functions. Бүтээл, захиалга нь **D1** өгөгдлийн санд, зургууд нь **KV**-д хадгалагдана.
+Гараар, захиалгаар урладаг үнэт эдлэлийн сайт. Cloudflare Workers дээр ажиллана:
+- **Сайт** (`public/`): ургадаг угалз, кино шиг нээлт, цуглуулга, хэмжээ оруулах, захиалга, "өөрийн санаагаар захиалах" форм.
+- **Админ** (`public/admin/`, хаяг нь `/admin/`): бүтээл нэмэх, засах, нуух, устгах, зураг оруулах, ирсэн захиалгыг харах, төлөв солих.
+- **Сервер** (`src/`): `/api/*` хүсэлтүүдийг хариулна. Бүтээл, захиалга нь **D1** өгөгдлийн санд, зургууд нь **KV**-д хадгалагдана.
 
-## Cloudflare дээрх тохиргоо (нэг удаа)
+## Cloudflare тохиргоо
 
-1. **Өгөгдлийн сан үүсгэх:** Cloudflare dashboard → Storage & databases → **D1** → Create → нэр `agilzgana-db`.
-2. **Зургийн сан үүсгэх:** Storage & databases → **KV** → Create → нэр `agilzgana-images`.
-3. **Сайттай холбох:** Workers & Pages → `agilzgana` төсөл → **Settings → Bindings → Add**:
-   - *D1 database*: Variable name = `DB`, database = `agilzgana-db`
-   - *KV namespace*: Variable name = `IMAGES`, namespace = `agilzgana-images`
-4. **Админы нууц үг:** Settings → **Variables and Secrets → Add** → Type = *Secret*, Name = `ADMIN_PASSWORD`, Value = өөрийн нууц үг.
-5. **Дахин deploy:** Deployments → хамгийн сүүлийнх → **Retry deployment**.
+`wrangler.jsonc` дотор бүх тохиргоо бий. GitHub-д push хийхэд Cloudflare Workers Builds `npx wrangler deploy` ажиллуулж,
+D1 өгөгдлийн сан (`DB`), KV зургийн сан (`IMAGES`)-г **анх deploy хийхэд автоматаар үүсгэж** холбоно.
 
-Build тохиргоо: Framework preset = None, Build command = хоосон, Build output directory = `/`.
+Гараар хийх ганц алхам бол **админы нууц үг**:
+Workers & Pages → `agilzgana` → Settings → **Variables and Secrets → Add** → Type = *Secret*, Name = `ADMIN_PASSWORD`, Value = өөрийн нууц үг → Deploy.
 
 Өгөгдлийн сангийн хүснэгтүүд анх ашиглахад автоматаар үүсч, 8 жишээ бүтээл орно. Жинхэнэ бүтээлээ оруулаад жишээнүүдийг админаас устгана.
 
@@ -32,5 +28,5 @@ Build тохиргоо: Framework preset = None, Build command = хоосон, B
 
 ```sh
 echo 'ADMIN_PASSWORD=test' > .dev.vars
-npx wrangler pages dev . --d1 DB=agz --kv IMAGES
+npx wrangler dev
 ```

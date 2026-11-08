@@ -1,4 +1,4 @@
-import { json, bad, makeSession, safeEqual, isAdmin } from "../../lib/core.js";
+import { json, bad, makeSession, safeEqual, isAdmin } from "../lib/core.js";
 
 const cookie = (v, maxAge) => `agz_admin=${v}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`;
 

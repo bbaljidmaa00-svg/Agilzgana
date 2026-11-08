@@ -1,4 +1,4 @@
-import { db, json, bad, rowToProduct, requireAdmin, cleanProduct } from "../../../lib/core.js";
+import { db, json, bad, rowToProduct, requireAdmin, cleanProduct } from "../../lib/core.js";
 
 export async function onRequestGet({ params, env }) {
   const DB = await db(env);
