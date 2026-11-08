@@ -11,5 +11,7 @@
   },
   "d1_databases": [{ "binding": "DB", "database_name": "agilzgana-db" }],
   "kv_namespaces": [{ "binding": "IMAGES", "id": "c7829159ddc44d518bdd2147cad03004" }],
+  // keep variables set in the dashboard (e.g. ADMIN_PASSWORD added as Text instead of Secret) across deploys
+  "keep_vars": true,
   "observability": { "enabled": true }
 }

@@ -95,7 +95,7 @@ export async function safeEqual(a, b) {
   return x === y;
 }
 export async function requireAdmin(request, env) {
-  if (!env.ADMIN_PASSWORD) return bad("ADMIN_PASSWORD тохируулаагүй байна. Cloudflare Pages → Settings → Variables and Secrets.", 503);
+  if (!env.ADMIN_PASSWORD) return bad("ADMIN_PASSWORD тохируулаагүй байна. Cloudflare → Workers & Pages → agilzgana → Settings → Variables and Secrets.", 503);
   if (!(await isAdmin(request, env))) return bad("Нэвтрэх шаардлагатай", 401);
   return null;
 }
