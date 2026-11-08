@@ -5,94 +5,212 @@
     "currency": "₮"
   },
   "categories": [
-    { "id": "ring",     "name": "Бөгж",            "size": "ring" },
-    { "id": "bracelet", "name": "Бугуйвч",         "size": "wrist" },
-    { "id": "cuff",     "name": "Arm cuff",        "size": "arm" },
-    { "id": "necklace", "name": "Зүүлт",           "size": "neck" },
-    { "id": "earring",  "name": "Ээмэг",           "size": "none" },
-    { "id": "belly",    "name": "Гэдэсний зүүлт",  "size": "waist" },
-    { "id": "clip",     "name": "Хавчаар",         "size": "none" }
+    {
+      "id": "ring",
+      "name": "Бөгж",
+      "size": "ring"
+    },
+    {
+      "id": "bracelet",
+      "name": "Бугуйвч",
+      "size": "wrist"
+    },
+    {
+      "id": "cuff",
+      "name": "Arm cuff",
+      "size": "arm"
+    },
+    {
+      "id": "necklace",
+      "name": "Зүүлт",
+      "size": "neck"
+    },
+    {
+      "id": "earring",
+      "name": "Ээмэг",
+      "size": "none"
+    },
+    {
+      "id": "belly",
+      "name": "Гэдэсний зүүлт",
+      "size": "waist"
+    },
+    {
+      "id": "clip",
+      "name": "Хавчаар",
+      "size": "none"
+    }
   ],
   "products": [
     {
-      "id": "ring-shuudertei",
-      "name": "Шүүдэр",
-      "category": "ring",
-      "price": 45000,
-      "images": [],
-      "material": "Мөнгөн утас, усан болор",
-      "description": "Өглөөний шүүдэр навчин дээр тогтсон мэт жижиг болортой нарийн бөгж.",
-      "isExample": true
-    },
-    {
-      "id": "ring-oroonggo",
-      "name": "Ороонго",
-      "category": "ring",
-      "price": 38000,
-      "images": [],
-      "material": "Алтан өнгийн гууль утас",
-      "description": "Усан үзмийн ороонго шиг хуруугаа тойрон эргэлдэх утсан бөгж.",
-      "isExample": true
-    },
-    {
-      "id": "bracelet-erveehei",
-      "name": "Эрвээхэй",
-      "category": "bracelet",
-      "price": 52000,
-      "images": [],
-      "material": "Мөнгөн гинж, шилэн сувс",
-      "description": "Нимгэн гинжин дээр жижиг эрвээхэй дүүжлэгдсэн бугуйвч.",
-      "isExample": true
-    },
-    {
-      "id": "cuff-navch",
-      "name": "Навчин ороолт",
+      "id": "cuff-alt-ugalz",
+      "name": "Алтан угалз",
       "category": "cuff",
-      "price": 68000,
-      "images": [],
-      "material": "Гууль утас, гараар урласан навч",
-      "description": "Шууны дээд хэсгийг ороох, навчны хээтэй arm cuff.",
-      "isExample": true
+      "featured": true,
+      "images": [
+        "/images/products/cuff-alt-1.webp",
+        "/images/products/cuff-pair-1.webp"
+      ],
+      "description": "Гарыг тойрон эргэлдэх хос угалзтай, оливин өнгийн жижиг сувсаар ороосон arm cuff.",
+      "material": "Алтан өнгийн утас, шилэн сувс",
+      "price": 0,
+      "hidden": false,
+      "isExample": false
     },
     {
-      "id": "necklace-naran",
-      "name": "Нар жаргах",
-      "category": "necklace",
-      "price": 59000,
-      "images": [],
-      "material": "Мөнгөн гинж, шар хаш",
-      "description": "Нарны сүүлчийн туяа шиг дулаан өнгийн чулуутай зүүлт.",
-      "isExample": true
+      "id": "cuff-mungun-ugalz",
+      "name": "Мөнгөн угалз",
+      "category": "cuff",
+      "images": [
+        "/images/products/cuff-mungun-1.webp",
+        "/images/products/cuff-pair-1.webp"
+      ],
+      "description": "Гар дээр урсах мэт эргэлдэх угалзтай мөнгөлөг arm cuff.",
+      "material": "Мөнгөлөг утас",
+      "price": 0,
+      "featured": false,
+      "hidden": false,
+      "isExample": false
     },
     {
-      "id": "earring-od",
-      "name": "Одот бороо",
+      "id": "cuff-suvdan-tsetseg",
+      "name": "Сувдан цэцэг",
+      "category": "cuff",
+      "featured": true,
+      "images": [
+        "/images/products/cuff-tsetseg-1.webp"
+      ],
+      "description": "Голдоо сувдан цэцэгтэй, хоёр үзүүртээ сувд бүхий угалзан arm cuff.",
+      "material": "Алтан өнгийн утас, сувд",
+      "price": 0,
+      "hidden": false,
+      "isExample": false
+    },
+    {
+      "id": "cuff-ulaan-chuluu",
+      "name": "Улаан дусал",
+      "category": "cuff",
+      "images": [
+        "/images/products/cuff-ulaan-1.webp"
+      ],
+      "description": "Мөрөн доор эргэлдэх угалзтай, улаан чулуун чимэгтэй arm cuff.",
+      "material": "Алтан өнгийн утас, чулуу",
+      "price": 0,
+      "featured": false,
+      "hidden": false,
+      "isExample": false
+    },
+    {
+      "id": "cuff-suvdan-oroomog",
+      "name": "Ороомог",
+      "category": "cuff",
+      "images": [
+        "/images/products/cuff-suvdan-1.webp"
+      ],
+      "description": "Гараа хэд дахин ороож, сувдаар чимэглэсэн ороомог arm cuff.",
+      "material": "Алтан өнгийн утас, сувд",
+      "price": 0,
+      "featured": false,
+      "hidden": false,
+      "isExample": false
+    },
+    {
+      "id": "cuff-ungu-ungu",
+      "name": "Өнгө өнгийн угалз",
+      "category": "cuff",
+      "images": [
+        "/images/products/cuff-ungu-1.webp"
+      ],
+      "description": "Улаан, хар, цэнхэр, ногоон зэрэг хүссэн өнгөөрөө сувс, цэцэгтэй хийлгэж болох arm cuff-ууд.",
+      "material": "Утас, шилэн сувс, цэцэг",
+      "price": 0,
+      "featured": false,
+      "hidden": false,
+      "isExample": false
+    },
+    {
+      "id": "ring-nar",
+      "name": "Нар",
+      "category": "ring",
+      "featured": true,
+      "images": [
+        "/images/products/ring-nar-1.webp"
+      ],
+      "description": "Голдоо сувдтай, нарны цацраг шиг гэрэлтэх бөгж.",
+      "material": "Алтан өнгийн утас, сувд",
+      "price": 0,
+      "hidden": false,
+      "isExample": false
+    },
+    {
+      "id": "ring-suvd",
+      "name": "Сувдан бөгж",
+      "category": "ring",
+      "images": [
+        "/images/products/ring-suvd-1.webp"
+      ],
+      "description": "Ганц сувдыг нарийн утсаар ороосон энгийн, гоёмсог бөгж.",
+      "material": "Алтан өнгийн утас, сувд",
+      "price": 0,
+      "featured": false,
+      "hidden": false,
+      "isExample": false
+    },
+    {
+      "id": "ring-khokh-chuluu",
+      "name": "Хөх нүд",
+      "category": "ring",
+      "images": [
+        "/images/products/ring-khokh-1.webp"
+      ],
+      "description": "Хоёр талдаа угалзтай, голдоо хөх чулуутай бөгж.",
+      "material": "Алтан өнгийн утас, чулуу",
+      "price": 0,
+      "featured": false,
+      "hidden": false,
+      "isExample": false
+    },
+    {
+      "id": "ring-yagaan-chuluu",
+      "name": "Ягаан угалз",
+      "category": "ring",
+      "images": [
+        "/images/products/ring-yagaan-1.webp"
+      ],
+      "description": "Хуруун дээр эргэлдэх угалзтай, цайвар ягаан чулуутай бөгж.",
+      "material": "Алтан өнгийн утас, чулуу",
+      "price": 0,
+      "featured": false,
+      "hidden": false,
+      "isExample": false
+    },
+    {
+      "id": "earring-ugalz",
+      "name": "Угалз ээмэг",
       "category": "earring",
-      "price": 32000,
-      "images": [],
-      "material": "Мөнгө, жижиг болор",
-      "description": "Унжсан жижиг одтой хөнгөн ээмэг.",
-      "isExample": true
+      "images": [
+        "/images/products/earring-ugalz-1.webp"
+      ],
+      "description": "Доош урсаж эргэлдэх угалзан хэлбэртэй хөнгөн ээмэг.",
+      "material": "Алтан өнгийн утас",
+      "price": 0,
+      "featured": false,
+      "hidden": false,
+      "isExample": false
     },
     {
-      "id": "belly-golinuur",
-      "name": "Голын урсгал",
-      "category": "belly",
-      "price": 75000,
-      "images": [],
-      "material": "Алтан өнгийн гинж, сувд",
-      "description": "Гол горхины урсгал шиг давхар гинжтэй гэдэсний зүүлт.",
-      "isExample": true
-    },
-    {
-      "id": "clip-tsetseg",
-      "name": "Хээрийн цэцэг",
-      "category": "clip",
-      "price": 24000,
-      "images": [],
-      "material": "Металл суурь, шилэн цэцэг",
-      "description": "Үсэнд жижиг цэцгийн баглаа тогтоосон мэт хавчаар.",
-      "isExample": true
+      "id": "necklace-ugalz",
+      "name": "Угалзан зүүлт",
+      "category": "necklace",
+      "images": [
+        "/images/products/necklace-ugalz-1.webp"
+      ],
+      "description": "Зууван хүрээн дотор угалз эргэлдэх мөнгөлөг зүүлт.",
+      "material": "Мөнгөлөг утас, гинж",
+      "price": 0,
+      "featured": false,
+      "hidden": false,
+      "isExample": false
     }
   ]
 }

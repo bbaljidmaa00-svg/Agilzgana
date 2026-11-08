@@ -69,7 +69,7 @@
         <span class="thumb">${p.images[0] ? `<img src="${esc(p.images[0])}" alt="" loading="lazy">` : art(p.category, i + 2)}</span>
         <span class="flags">${p.hidden ? '<span class="flag hid">Нуусан</span>' : ""}${p.featured ? '<span class="flag ft">Онцлох</span>' : ""}${p.isExample ? '<span class="flag ex">Жишээ</span>' : ""}</span>
         <span class="nm">${esc(p.name)}</span>
-        <span class="meta"><span>${esc(catOf(p.category).name)}</span><span>${money(p.price)}</span></span>
+        <span class="meta"><span>${esc(catOf(p.category).name)}</span><span>${AGZ.priceText(p.price)}</span></span>
       </button>`).join("") : `<p class="a-empty">Бүтээл олдсонгүй. "+ Шинэ бүтээл" дээр дарж эхнийхээ бүтээлийг нэмээрэй.</p>`;
   }
   $("#prodGrid").addEventListener("click", (e) => { const c = e.target.closest(".a-card"); if (c) openEditor(products.find((p) => p.id === c.dataset.id)); });

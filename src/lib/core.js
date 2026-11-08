@@ -1,5 +1,5 @@
 // Shared helpers for Pages Functions: JSON responses, schema, admin auth.
-import seed from "./seed.js";
+import seed, { OLD_EXAMPLE_IDS } from "./seed.js";
 // Note: lives outside public/ so it is never served as a static file.
 
 export const json = (data, status = 200, headers = {}) =>
@@ -45,12 +45,14 @@ export async function db(env) {
     )`),
     env.DB.prepare(`CREATE TABLE IF NOT EXISTS meta (k TEXT PRIMARY KEY, v TEXT)`)
   ]);
-  const seeded = await env.DB.prepare("SELECT v FROM meta WHERE k='seeded'").first();
+  // v2: Baljka's real pieces replace the made-up examples (an admin-edited example is kept: only untouched ones go)
+  const seeded = await env.DB.prepare("SELECT v FROM meta WHERE k='seeded_v2'").first();
   if (!seeded) {
-    const stmts = seed.map((p, i) =>
-      env.DB.prepare(`INSERT OR IGNORE INTO products (id,name,category,price,description,material,images,is_example,sort)
-        VALUES (?,?,?,?,?,?,?,1,?)`).bind(p.id, p.name, p.category, p.price, p.description, p.material, "[]", i));
-    stmts.push(env.DB.prepare("INSERT OR REPLACE INTO meta (k,v) VALUES ('seeded','1')"));
+    const stmts = [env.DB.prepare(`DELETE FROM products WHERE is_example=1 AND id IN (${OLD_EXAMPLE_IDS.map(() => "?").join(",")}) AND images='[]'`).bind(...OLD_EXAMPLE_IDS)];
+    seed.forEach((p, i) => stmts.push(
+      env.DB.prepare(`INSERT OR IGNORE INTO products (id,name,category,price,description,material,images,featured,is_example,sort)
+        VALUES (?,?,?,?,?,?,?,?,0,?)`).bind(p.id, p.name, p.category, p.price, p.description, p.material, JSON.stringify(p.images), p.featured ? 1 : 0, i)));
+    stmts.push(env.DB.prepare("INSERT OR REPLACE INTO meta (k,v) VALUES ('seeded_v2','1')"));
     await env.DB.batch(stmts);
   }
   ready = true;
@@ -113,7 +115,7 @@ export function cleanProduct(body) {
   if (body.material !== undefined) out.material = String(body.material).slice(0, 300);
   if (body.images !== undefined) {
     if (!Array.isArray(body.images)) throw new Error("Зураг буруу");
-    out.images = JSON.stringify(body.images.filter((s) => typeof s === "string" && /^(\/api\/img\/[\w.-]+|images\/[\w./-]+|https:\/\/[^\s"]+)$/.test(s)).slice(0, 12));
+    out.images = JSON.stringify(body.images.filter((s) => typeof s === "string" && /^(\/api\/img\/[\w.-]+|\/?images\/[\w./-]+|https:\/\/[^\s"]+)$/.test(s)).slice(0, 12));
   }
   if (body.hidden !== undefined) out.hidden = body.hidden ? 1 : 0;
   if (body.featured !== undefined) out.featured = body.featured ? 1 : 0;

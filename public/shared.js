@@ -12,6 +12,8 @@ window.AGZ = (() => {
   const INSTAGRAM = "agilzgana_";
   const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const money = (n) => Number(n || 0).toLocaleString("en-US").replace(/,/g, " ") + " ₮";
+  const ASK = "Үнэ тохиролцоно";
+  const priceText = (n, from) => (n > 0 ? money(n) + (from ? "-аас" : "") : ASK);
   const catOf = (id) => CATEGORIES.find((c) => c.id === id) || { id, name: id, size: "none" };
   const isLatin = (t) => /^[\x00-\x7F]*$/.test(t);
 
@@ -87,5 +89,5 @@ window.AGZ = (() => {
     </svg>`;
   }
 
-  return { CATEGORIES, INSTAGRAM, esc, money, catOf, isLatin, api, shrink, upload, art };
+  return { CATEGORIES, INSTAGRAM, esc, money, priceText, catOf, isLatin, api, shrink, upload, art };
 })();

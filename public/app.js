@@ -1,6 +1,6 @@
 /* Agilzgana storefront. Products come from /api/products (Cloudflare D1); products.json is the offline fallback. */
 (() => {
-  const { CATEGORIES, INSTAGRAM, esc, money, catOf, isLatin, api, upload, art } = window.AGZ;
+  const { CATEGORIES, INSTAGRAM, esc, money, priceText, catOf, isLatin, api, upload, art } = window.AGZ;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const store = {
@@ -311,7 +311,7 @@
           <svg class="card-orn" viewBox="0 0 410 140" aria-hidden="true"><use href="#ugalz"/></svg>
         </span>
         <span class="card-cat">${esc(catOf(p.category).name)}</span>
-        <span class="card-row"><span class="card-name">${esc(p.name)}</span><span class="card-price">${money(p.price)}-аас</span></span>
+        <span class="card-row"><span class="card-name">${esc(p.name)}</span><span class="card-price">${priceText(p.price, true)}</span></span>
       </button>`).join("")
       : `<p class="empty">Энэ төрөлд одоогоор бүтээл алга. <a href="#custom">Өөрийн санаагаар захиалаарай.</a></p>`;
     $("#exampleNote").hidden = !PRODUCTS.some((p) => p.isExample);
@@ -411,7 +411,7 @@
     $("#pCat").textContent = c.name;
     $("#pName").textContent = p.name;
     $("#pName").classList.toggle("latin", isLatin(p.name));
-    $("#pPrice").textContent = money(p.price) + "-аас" + (p.isExample ? " · жишээ үнэ" : "");
+    $("#pPrice").textContent = priceText(p.price, true) + (p.isExample && p.price ? " · жишээ үнэ" : "");
     $("#pDesc").textContent = p.description || "";
     $("#pMat").textContent = p.material ? "Материал: " + p.material : "";
     $("#sizeField").innerHTML = (SIZE_UI[c.size] || SIZE_UI.none)();
@@ -448,7 +448,7 @@
       </li>`).join("");
     const total = items.reduce((a, b) => a + b.p.price * b.qty, 0);
     $("#bagEmpty").hidden = items.length > 0;
-    $("#bagTotal").textContent = items.length ? "Нийт: " + money(total) : "";
+    $("#bagTotal").textContent = items.length ? "Нийт: " + money(total) + (items.some((b) => !b.p.price) ? " + үнэ тохиролцох бүтээл" : "") : "";
     $("#orderForm").hidden = !items.length;
     $("#sentBox").hidden = true;
     return { items, total };
@@ -483,8 +483,8 @@
       try { id = (await api("/api/orders", { method: "POST", body: JSON.stringify({ kind: "order", customer: c, items: items.map((b) => ({ id: b.id, qty: b.qty, size: b.size, note: b.note })) }) })).id; } catch {}
     }
     btn.disabled = false;
-    const lines = items.map((b, n) => `${n + 1}. ${b.p.name} (${catOf(b.p.category).name})${b.size ? " · " + b.size : ""} · ${b.qty} ш · ${money(b.p.price * b.qty)}${b.note ? "\n   Тэмдэглэл: " + b.note : ""}`);
-    $("#orderText").textContent = `Сайн байна уу! Agilzgana-аас захиалга өгье${id ? ` (№${id})` : ""}.\n\n${lines.join("\n")}\n\nНийт: ${money(total)}\n\nНэр: ${c.name}\nУтас: ${c.phone}${c.instagram ? "\nInstagram: " + c.instagram : ""}\nХаяг: ${c.address}`;
+    const lines = items.map((b, n) => `${n + 1}. ${b.p.name} (${catOf(b.p.category).name})${b.size ? " · " + b.size : ""} · ${b.qty} ш · ${b.p.price ? money(b.p.price * b.qty) : "үнэ тохиролцоно"}${b.note ? "\n   Тэмдэглэл: " + b.note : ""}`);
+    $("#orderText").textContent = `Сайн байна уу! Agilzgana-аас захиалга өгье${id ? ` (№${id})` : ""}.\n\n${lines.join("\n")}\n\nНийт: ${total ? money(total) : "үнэ тохиролцоно"}\n\nНэр: ${c.name}\nУтас: ${c.phone}${c.instagram ? "\nInstagram: " + c.instagram : ""}\nХаяг: ${c.address}`;
     $("#sentLede").textContent = id
       ? `Захиалга №${id} бүртгэгдлээ! Баталгаажуулахын тулд доорх текстийг Instagram-аар илгээнэ үү.`
       : "Захиалгын мэдээлэл бэлэн боллоо. Доорх текстийг хуулаад Instagram-аар илгээнэ үү.";
