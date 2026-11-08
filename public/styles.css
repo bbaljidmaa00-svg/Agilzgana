@@ -105,9 +105,15 @@ svg use, svg g.orn { fill: none; stroke: color-mix(in srgb, var(--moss) 85%, var
 .d-col-l, .d-col-r { top: clamp(4rem, 8vw, 7rem); width: clamp(190px, 20vw, 300px); opacity: .85; }
 .d-col-l { left: 0; transform: scaleX(-1); }   /* both swans face the title */
 .d-col-r { right: 0; }
-.d-cus-l { right: clamp(170px, 22vw, 320px); top: 2rem; height: clamp(240px, 32vw, 420px); opacity: .55; }
-.d-cus-r { right: 1vw; bottom: 3rem; height: clamp(240px, 32vw, 440px); opacity: .5; transform: scaleX(-1); }
-.d-size { right: 0; top: 1rem; height: clamp(200px, 26vw, 340px); transform: scaleX(-1); opacity: .7; }
+/* painted botanical ornaments (rose garland, butterfly on swirls, lily vine), unveiled with a soft wipe as they scroll in */
+.deco.art { height: auto; opacity: 1; clip-path: inset(0 0 calc(var(--draw, 0) * 100%) 0); transition: clip-path .4s linear; }
+.art { pointer-events: none; user-select: none; }
+.hero .art { position: absolute; z-index: -1; width: clamp(180px, 30vw, 460px); animation: art-in 2.4s var(--ease-out) .6s both; }
+.art-tl { top: 0; left: 0; } .art-br { bottom: 0; right: 0; transform: rotate(180deg); }
+@keyframes art-in { from { opacity: 0; filter: blur(8px); } }
+.d-cus-l { right: clamp(240px, 26vw, 400px); top: 1rem; width: clamp(220px, 26vw, 380px); }
+.d-cus-r { right: 1vw; bottom: 2rem; width: clamp(130px, 14vw, 210px); }
+.d-size { right: 0; top: 1rem; width: clamp(120px, 13vw, 200px); }
 /* brush-stroke art (the swan) is filled, so it is revealed with a soft wipe instead of a stroke draw */
 .deco.ink { color: var(--petal); clip-path: inset(-5% calc(var(--draw, 0) * 105%) -5% -5%); transition: clip-path .3s linear; }
 .deco.ink use { stroke: none; stroke-dasharray: none; }
