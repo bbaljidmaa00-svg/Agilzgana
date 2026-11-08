@@ -99,3 +99,5 @@ body.admin { min-height: 100vh; }
   .editor { border-radius: 0; }
   .a-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+.a-top .site-edit { padding: .5rem 1rem; font-size: .74rem; }
+@media (max-width: 560px) { .a-top .site-edit { padding: .45rem .7rem; font-size: .66rem; } }

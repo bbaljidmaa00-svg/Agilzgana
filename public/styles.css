@@ -490,3 +490,11 @@ svg use, svg g.orn { fill: none; stroke: color-mix(in srgb, var(--moss) 85%, var
 .process h3 { font-size: 1.7rem; }
 @media (max-width: 860px) { .d-size { left: auto; right: -10px; top: 0; width: 96px; opacity: .45; } }
 @media (max-width: 600px) { .hero .art { width: 132px; } .hero .art-tl { top: -6px; left: -6px; } }
+
+/* ---------- content Baljka edits on the page (site.js) ---------- */
+.agz-hide { display: none !important; }
+.user-img { display: block; max-width: min(100%, 560px); height: auto; margin: 1.4rem auto; border-radius: 14px; }
+.agz-pencil { position: fixed; z-index: 60; right: 16px; bottom: 16px; display: flex; align-items: center; gap: .4rem; padding: .6rem 1rem; border-radius: 999px; border: 1px solid var(--line, rgba(0,0,0,.12));
+  background: var(--bg-2); color: var(--petal-ink); font: 500 .84rem var(--f-tech); letter-spacing: .04em; box-shadow: var(--shadow); cursor: pointer; }
+.agz-pencil:hover { background: var(--petal); color: #fff; }
+@media (max-width: 640px) { .agz-pencil span { display: none; } }

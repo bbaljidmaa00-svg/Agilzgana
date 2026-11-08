@@ -6,6 +6,7 @@ import * as order from "./api/orders/item.js";
 import * as login from "./api/login.js";
 import * as upload from "./api/upload.js";
 import * as img from "./api/img.js";
+import * as site from "./api/site.js";
 import { json } from "./lib/core.js";
 
 const routes = [
@@ -15,7 +16,8 @@ const routes = [
   [/^\/api\/orders\/(\d+)$/, order, "id"],
   [/^\/api\/login\/?$/, login],
   [/^\/api\/upload\/?$/, upload],
-  [/^\/api\/img\/([^/]+)$/, img, "key"]
+  [/^\/api\/img\/([^/]+)$/, img, "key"],
+  [/^\/api\/site\/?$/, site]
 ];
 
 const METHOD = { GET: "onRequestGet", POST: "onRequestPost", PUT: "onRequestPut", PATCH: "onRequestPatch", DELETE: "onRequestDelete" };

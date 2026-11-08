@@ -24,6 +24,12 @@
     if (!me.configured) missing.push("Нууц үг: Settings → Variables and Secrets → <code>ADMIN_PASSWORD</code> (Secret)");
     if (missing.length) return setup(missing);
     if (!me.admin) { view("loginView"); $("#pw").focus(); return; }
+    signedIn();
+  }
+  // remember on this device that Baljka is the admin, so the shop shows her the "Сайтаа засах" button
+  function signedIn() {
+    try { localStorage.setItem("agz-admin", "1"); } catch {}
+    if (/[?&]next=edit\b/.test(location.search)) { location.href = "../?edit"; return; }
     view("appView"); loadAll();
   }
   function setup(items) { $("#setupList").innerHTML = items.map((i) => `<li>${i}</li>`).join(""); view("setupView"); }
@@ -31,11 +37,11 @@
   $("#loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const btn = e.target.querySelector("button[type=submit]"); btn.disabled = true;
-    try { await api("/api/login", { method: "POST", body: JSON.stringify({ password: $("#pw").value }) }); $("#pw").value = ""; $("#loginErr").textContent = ""; view("appView"); loadAll(); }
+    try { await api("/api/login", { method: "POST", body: JSON.stringify({ password: $("#pw").value }) }); $("#pw").value = ""; $("#loginErr").textContent = ""; signedIn(); }
     catch (err) { $("#loginErr").textContent = err.message; }
     btn.disabled = false;
   });
-  $("#logoutBtn").addEventListener("click", async () => { await api("/api/login", { method: "DELETE" }).catch(() => {}); view("loginView"); });
+  $("#logoutBtn").addEventListener("click", async () => { await api("/api/login", { method: "DELETE" }).catch(() => {}); try { localStorage.removeItem("agz-admin"); } catch {} view("loginView"); });
 
   function authFail(err) { if (err.status === 401) { view("loginView"); return true; } toast(err.message); return false; }
 
