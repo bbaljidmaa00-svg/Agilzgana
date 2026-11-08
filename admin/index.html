@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Agilzgana Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Bad+Script&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Exo+2:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="admin.css">
+<script>try{var t=localStorage.getItem("agz-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body class="admin">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--gold-hi)"/><stop offset=".55" style="stop-color:var(--gold)"/><stop offset="1" style="stop-color:var(--petal)"/></linearGradient>
+    <g id="ugalzHalf">
+      <path d="M0 34 C 34 36, 62 12, 60 -16 C 58 -42, 30 -50, 17 -36 C 5 -23, 17 -6, 31 -13 C 40 -18, 37 -30, 29 -29"/>
+      <path d="M0 34 C 64 62, 128 40, 142 2 C 154 -30, 132 -56, 108 -48 C 88 -41, 92 -16, 110 -18 C 121 -19, 122 -32, 113 -33"/>
+      <path d="M142 2 C 158 24, 182 30, 198 14"/>
+      <path d="M60 -16 C 76 -40, 70 -64, 52 -72"/>
+    </g>
+    <symbol id="ugalz" viewBox="-205 -80 410 140">
+      <use href="#ugalzHalf"/><use href="#ugalzHalf" transform="scale(-1 1)"/>
+      <path d="M0 -66 C 12 -46, 12 -24, 0 -6 C -12 -24, -12 -46, 0 -66 Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- LOGIN -->
+<section class="login" id="loginView" hidden>
+  <form class="login-card glass" id="loginForm" novalidate>
+    <svg class="login-orn" viewBox="0 0 410 140" aria-hidden="true"><use href="#ugalz"/></svg>
+    <h1 class="brand">Agilzgana</h1>
+    <p class="muted">Админ хэсэг</p>
+    <div class="field"><label for="pw">Нууц үг</label><input id="pw" type="password" autocomplete="current-password"></div>
+    <p class="err" id="loginErr" role="alert"></p>
+    <button class="btn primary wide" type="submit"><span>Нэвтрэх</span></button>
+    <a class="back" href="../">← Сайт руу буцах</a>
+  </form>
+</section>
+
+<!-- SETUP NEEDED -->
+<section class="login" id="setupView" hidden>
+  <div class="login-card glass">
+    <h1 class="brand">Agilzgana</h1>
+    <h2 class="setup-title">Тохиргоо дутуу байна</h2>
+    <ul class="setup-list" id="setupList"></ul>
+    <p class="muted">Cloudflare дээр тохируулаад сайтаа дахин deploy хийсний дараа энэ хуудсыг сэргээнэ үү.</p>
+  </div>
+</section>
+
+<!-- APP -->
+<div class="app" id="appView" hidden>
+  <header class="a-top">
+    <a class="brand" href="../" title="Сайт руу очих">Agilzgana</a>
+    <nav class="tabs" role="tablist">
+      <button type="button" role="tab" class="tab" data-tab="products" aria-selected="true">Бүтээлүүд</button>
+      <button type="button" role="tab" class="tab" data-tab="orders" aria-selected="false">Захиалга <span class="badge" id="newCount" hidden></span></button>
+    </nav>
+    <button class="icon-btn" id="logoutBtn" type="button" title="Гарах" aria-label="Гарах">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </header>
+
+  <main class="a-main">
+    <!-- products -->
+    <section id="tab-products">
+      <div class="a-head">
+        <div>
+          <h2 class="a-title">Бүтээлүүд</h2>
+          <p class="muted" id="prodSummary"></p>
+        </div>
+        <button class="btn primary" type="button" id="newBtn"><span>+ Шинэ бүтээл</span></button>
+      </div>
+      <div class="a-filter">
+        <select id="fCat" aria-label="Төрлөөр шүүх"></select>
+        <input id="fSearch" type="search" placeholder="Нэрээр хайх" aria-label="Нэрээр хайх">
+      </div>
+      <div class="a-grid" id="prodGrid"></div>
+    </section>
+
+    <!-- orders -->
+    <section id="tab-orders" hidden>
+      <div class="a-head">
+        <div>
+          <h2 class="a-title">Захиалга</h2>
+          <p class="muted" id="orderSummary"></p>
+        </div>
+        <select id="oFilter" aria-label="Төлөвөөр шүүх">
+          <option value="active">Идэвхтэй</option><option value="all">Бүгд</option><option value="new">Шинэ</option>
+          <option value="making">Хийж байна</option><option value="ready">Бэлэн</option><option value="done">Хүргэсэн</option><option value="cancelled">Цуцалсан</option>
+        </select>
+      </div>
+      <div class="o-list" id="orderList"></div>
+    </section>
+  </main>
+</div>
+
+<!-- EDITOR -->
+<div class="veil" id="veil" hidden></div>
+<section class="panel editor" id="editor" role="dialog" aria-modal="true" aria-labelledby="edTitle" hidden>
+  <button class="close" type="button" id="edClose" aria-label="Хаах">×</button>
+  <form id="edForm" novalidate>
+    <h3 class="ed-title" id="edTitle">Шинэ бүтээл</h3>
+    <div class="field">
+      <span class="label">Зургууд <span class="opt">(эхнийх нь нүүр зураг болно, 12 хүртэл)</span></span>
+      <div class="ed-images" id="edImages"></div>
+      <label class="drop big" id="drop" for="edFiles">
+        <input id="edFiles" type="file" accept="image/*" multiple>
+        <span><strong>Зураг нэмэх</strong><br><small>Утаснаасаа сонгох эсвэл энд чирж оруулна</small></span>
+      </label>
+      <p class="help" id="upStatus" role="status"></p>
+    </div>
+    <div class="ed-grid">
+      <div class="field span2"><label for="edName">Нэр</label><input id="edName" maxlength="80" placeholder="Жишээ нь: Навчин бөгж"></div>
+      <div class="field"><label for="edCat">Төрөл</label><select id="edCat"></select></div>
+      <div class="field"><label for="edPrice">Үнэ (₮)</label><input id="edPrice" type="number" inputmode="numeric" min="0" step="500" placeholder="45000"></div>
+      <div class="field span2"><label for="edMat">Материал</label><input id="edMat" maxlength="300" placeholder="Мөнгөн утас, усан болор"></div>
+      <div class="field span2"><label for="edDesc">Тайлбар</label><textarea id="edDesc" rows="4" maxlength="2000" placeholder="Бүтээлийн түүх, онцлог"></textarea></div>
+      <label class="toggle"><input type="checkbox" id="edFeat"><span>Онцлох (эхэнд, "Шинэ" тэмдэгтэй)</span></label>
+      <label class="toggle"><input type="checkbox" id="edHidden"><span>Нуух (сайт дээр харагдахгүй)</span></label>
+    </div>
+    <p class="err" id="edErr" role="alert"></p>
+    <div class="ed-actions">
+      <button class="btn ghost danger" type="button" id="edDelete"><span>Устгах</span></button>
+      <button class="btn primary" type="submit" id="edSave"><span>Хадгалах</span></button>
+    </div>
+    <div class="confirm" id="confirmDel" hidden>
+      <p>Энэ бүтээлийг зурагтай нь бүр мөсөн устгах уу?</p>
+      <div class="ed-actions">
+        <button class="btn ghost" type="button" id="delNo"><span>Болих</span></button>
+        <button class="btn primary danger-fill" type="button" id="delYes"><span>Тийм, устгах</span></button>
+      </div>
+    </div>
+  </form>
+</section>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="../shared.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
