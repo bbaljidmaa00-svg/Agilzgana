@@ -21,7 +21,7 @@
   --night-fg: #F8ECE6;
   --night-muted: #CDB5BF;
 
-  --f-logo: "Great Vibes", "Snell Roundhand", cursive;
+  --f-logo: "Parisienne", "Snell Roundhand", cursive;   /* clear capital A */
   --f-script: "Cormorant Garamond", "Cormorant", Georgia, serif;   /* used in italic semibold: elegant accent that carries Mongolian ө ү */
   --f-serif: "Cormorant Garamond", "Cormorant", Georgia, serif;
   --f-tech: "Exo 2", "Trebuchet MS", system-ui, sans-serif;
@@ -175,7 +175,7 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 .logotype { margin: 0; line-height: .85; font-weight: 400; }
 .logo-word {
   position: relative; display: inline-block; font-family: var(--f-logo); font-size: var(--step-hero);
-  padding: .12em .3em .2em .15em;
+  padding: .2em .35em .48em .3em; margin: -.08em 0 -.3em;   /* room for Parisienne swashes and descenders inside the text-clipped box */
   background: linear-gradient(100deg, var(--petal) 0%, var(--petal) 38%, var(--gold-hi) 48%, #fff 50%, var(--gold-hi) 52%, var(--petal) 62%, var(--petal) 100%);
   background-size: 300% 100%; background-position: 100% 0;
   -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -184,9 +184,9 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 .js .logo-word { animation: write 2.6s var(--ease-out) .3s both, shimmer 7s ease-in-out 3s infinite; }
 .js:not(.no-intro) .logo-word { animation-delay: 2.5s, 5.5s; }
 @keyframes write {
-  from { clip-path: inset(-10% 100% -10% 0); filter: blur(14px); transform: translateY(14px) rotate(-4deg) scale(.96); }
+  from { clip-path: inset(-30% 100% -30% 0); filter: blur(14px); transform: translateY(14px) rotate(-4deg) scale(.96); }
   60% { filter: blur(0) drop-shadow(0 10px 30px color-mix(in srgb, var(--petal) 35%, transparent)); }
-  to { clip-path: inset(-10% -10% -10% 0); transform: none; }
+  to { clip-path: inset(-30% -10% -30% 0); transform: none; }
 }
 @keyframes shimmer { 0%, 70% { background-position: 100% 0; } 100% { background-position: -50% 0; } }
 .hero-ornament { width: min(440px, 86vw); margin-top: -.4rem; overflow: visible; }
