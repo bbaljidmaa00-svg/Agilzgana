@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <!-- soft watercolour washes: rose petals and leaf green bleeding into warm paper -->
+  <defs>
+    <filter id="w" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="4" seed="7" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="170" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feGaussianBlur in="d" stdDeviation="22"/>
+    </filter>
+    <filter id="e" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency=".02" numOctaves="3" seed="3" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="90" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feGaussianBlur in="d" stdDeviation="6"/>
+    </filter>
+  </defs>
+  <g filter="url(#w)">
+    <ellipse cx="120" cy="120" rx="330" ry="230" fill="#F2B8CB" opacity=".42"/>
+    <ellipse cx="1480" cy="220" rx="300" ry="260" fill="#B9D39A" opacity=".40"/>
+    <ellipse cx="1430" cy="880" rx="360" ry="240" fill="#F2B8CB" opacity=".36"/>
+    <ellipse cx="160" cy="820" rx="300" ry="260" fill="#B9D39A" opacity=".36"/>
+    <ellipse cx="820" cy="40" rx="260" ry="90" fill="#F7D9C4" opacity=".35"/>
+    <ellipse cx="760" cy="980" rx="320" ry="110" fill="#CFE0B4" opacity=".28"/>
+  </g>
+  <g filter="url(#e)" fill="none" stroke-width="5">
+    <ellipse cx="120" cy="120" rx="300" ry="205" stroke="#E79BB5" opacity=".18"/>
+    <ellipse cx="1480" cy="220" rx="270" ry="235" stroke="#9DBE7A" opacity=".18"/>
+    <ellipse cx="1430" cy="880" rx="330" ry="215" stroke="#E79BB5" opacity=".15"/>
+  </g>
+</svg>

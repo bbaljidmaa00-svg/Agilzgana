@@ -1,25 +1,25 @@
 /* Layout: a single flowing scroll. A living угалз garden grows in the hero, a vine draws itself down the page as you scroll,
    one deep-forest "night" section holds the bespoke order, glass panels bloom over for product + order. */
 :root {
-  --bg: #F6F3EA;          /* blush ivory */
-  --bg-2: #FFFDF7;        /* milk surface */
-  --bg-3: #E9EADB;        /* rosy sand for bands */
-  --fg: #1F2E26;          /* plum brown ink */
-  --muted: #5E6B62;
-  --petal: #2F6B4F;       /* dusty rose, the logotype */
-  --petal-ink: #245A41;   /* rose for small text */
-  --moss: #8AA27A;        /* sage */
-  --gold: #B08A3E;        /* champagne gold */
-  --gold-hi: #E8D4A0;
+  --bg: #FBF7EF;          /* blush ivory */
+  --bg-2: #FFFDF8;        /* milk surface */
+  --bg-3: #F3EFE0;        /* rosy sand for bands */
+  --fg: #3D3A2C;          /* plum brown ink */
+  --muted: #706B58;
+  --petal: #D47494;       /* dusty rose, the logotype */
+  --petal-ink: #B04F73;   /* rose for small text */
+  --moss: #7FA25A;        /* sage */
+  --gold: #B59A5C;        /* champagne gold */
+  --gold-hi: #ECDDB0;
   --glass: rgba(255, 253, 250, .7);
   --glass-line: rgba(176, 134, 71, .3);
   --line: rgba(0, 0, 0, .12);
-  --shadow: 0 40px 90px -40px rgba(20,46,32, .38);
-  --vine: rgba(47,107,79, .36);
-  --night: #14261D;       /* deep plum section */
-  --night-2: #1E3529;
-  --night-fg: #F3EFE3;
-  --night-muted: #B9C4B6;
+  --shadow: 0 40px 90px -40px rgba(60,70,40, .38);
+  --vine: rgba(127,162,90, .36);
+  --night: #2E3D29;       /* deep plum section */
+  --night-2: #475C3B;
+  --night-fg: #F8F3E6;
+  --night-muted: #CED5BE;
 
   --f-logo: "Italianno", "Snell Roundhand", cursive;   /* elegant calligraphy with a clear capital A */
   --f-script: "Cormorant Garamond", "Cormorant", Georgia, serif;   /* used in italic semibold: elegant accent that carries Mongolian ө ү */
@@ -36,20 +36,20 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #101A15; --bg-2: #17241D; --bg-3: #13201A; --fg: #EEF0E6; --muted: #AAB8AD;
-    --petal: #7FC4A0; --petal-ink: #9AD3B4; --moss: #A9C29A; --gold: #E0C27E; --gold-hi: #F0DDB0;
+    --bg: #171C14; --bg-2: #20271C; --bg-3: #1B2118; --fg: #F1EDE0; --muted: #B9B7A3;
+    --petal: #F0A3BE; --petal-ink: #F5B9CE; --moss: #B5D193; --gold: #E0C98E; --gold-hi: #F0E2B8;
     --glass: rgba(39, 26, 34, .64); --glass-line: rgba(226, 192, 138, .28); --line: rgba(246, 233, 228, .13);
-    --shadow: 0 40px 90px -40px rgba(0, 0, 0, .8); --vine: rgba(127,196,160, .32);
-    --night: #0A120E; --night-2: #13201A;
+    --shadow: 0 40px 90px -40px rgba(0, 0, 0, .8); --vine: rgba(181,209,147, .32);
+    --night: #0F140D; --night-2: #1A2216;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #101A15; --bg-2: #17241D; --bg-3: #13201A; --fg: #EEF0E6; --muted: #AAB8AD;
-  --petal: #7FC4A0; --petal-ink: #9AD3B4; --moss: #A9C29A; --gold: #E0C27E; --gold-hi: #F0DDB0;
+  --bg: #171C14; --bg-2: #20271C; --bg-3: #1B2118; --fg: #F1EDE0; --muted: #B9B7A3;
+  --petal: #F0A3BE; --petal-ink: #F5B9CE; --moss: #B5D193; --gold: #E0C98E; --gold-hi: #F0E2B8;
   --glass: rgba(39, 26, 34, .64); --glass-line: rgba(226, 192, 138, .28); --line: rgba(246, 233, 228, .13);
-  --shadow: 0 40px 90px -40px rgba(0, 0, 0, .8); --vine: rgba(127,196,160, .32);
-  --night: #0A120E; --night-2: #13201A;
+  --shadow: 0 40px 90px -40px rgba(0, 0, 0, .8); --vine: rgba(181,209,147, .32);
+  --night: #0F140D; --night-2: #1A2216;
   color-scheme: dark;
 }
 
@@ -68,6 +68,10 @@ a { color: inherit; }
 :focus-visible { outline: 2px solid var(--petal-ink); outline-offset: 3px; border-radius: 6px; }
 .script { font-family: var(--f-script); color: var(--petal-ink); font-size: .95em; }
 
+/* watercolour paper: soft rose and leaf-green washes bleeding in from the corners */
+body::after { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background: url("images/wash.svg") center / cover no-repeat; }
+:root[data-theme="dark"] body::after { opacity: .22; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) body::after { opacity: .22; } }
 #pollen { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 .grain {
   position: fixed; inset: -50%; z-index: 60; pointer-events: none; opacity: .07; mix-blend-mode: multiply;
@@ -85,7 +89,7 @@ main, .nav, .foot { position: relative; z-index: 1; }
 }
 
 /* ---------- ornament (shared) ---------- */
-svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+svg use, svg g.orn { fill: none; stroke: color-mix(in srgb, var(--moss) 85%, var(--fg)); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .custom svg use, .custom svg g.orn { stroke: var(--gold-hi); }
 /* hand-drawn line-art decorations that draw themselves as they scroll into view */
 .deco { position: absolute; z-index: 0; overflow: visible; pointer-events: none; opacity: .8; }
@@ -108,9 +112,7 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 .deco.ink { color: var(--petal); clip-path: inset(-5% calc(var(--draw, 0) * 105%) -5% -5%); transition: clip-path .3s linear; }
 .deco.ink use { stroke: none; stroke-dasharray: none; }
 /* collection: champagne-gold ornaments against the blush ground */
-.collection .deco.ink { color: var(--gold); }
-.collection .head-orn use { stroke: var(--gold); }
-.collection .section-head .h2 em { background: linear-gradient(100deg, color-mix(in srgb, var(--gold) 80%, var(--fg)), var(--gold) 45%, color-mix(in srgb, var(--gold) 60%, var(--gold-hi)) 60%, color-mix(in srgb, var(--gold) 80%, var(--fg))); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.collection .deco.ink { color: color-mix(in srgb, var(--moss) 85%, var(--fg)); }
 .story-text { position: relative; }
 .d-swan { right: -1rem; top: clamp(-9rem, -10vw, -5rem); width: clamp(150px, 18vw, 230px); opacity: .9; }
 
@@ -177,7 +179,7 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
 /* ---------- hero ---------- */
 .hero { position: relative; overflow: hidden; padding-block: clamp(3.5rem, 9vw, 8rem) clamp(5rem, 10vw, 9rem); isolation: isolate; }
 .garden { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; }
-.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 30%; background: linear-gradient(transparent, var(--bg)); z-index: -1; pointer-events: none; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 30%; background: linear-gradient(transparent, color-mix(in srgb, var(--bg) 40%, transparent)); z-index: -1; pointer-events: none; }
 .hero-in { position: relative; max-width: 1280px; margin: 0 auto; display: grid; justify-items: center; text-align: center; }
 .logotype { margin: 0; line-height: .85; font-weight: 400; }
 .logo-word {
@@ -291,9 +293,10 @@ svg use, svg g.orn { fill: none; stroke: var(--petal); stroke-width: 1.6; stroke
   position: relative; isolation: isolate; overflow: hidden; margin-top: clamp(3rem, 6vw, 5rem);
   background: radial-gradient(80% 60% at 80% 0%, var(--night-2), var(--night));
   color: var(--night-fg); border-radius: clamp(28px, 5vw, 60px) clamp(28px, 5vw, 60px) 0 0;
-  --fg: var(--night-fg); --muted: var(--night-muted); --moss: #C3D3B0; --petal-ink: #F7B3CF; --line: rgba(248, 236, 230, .15);
-  --glass: rgba(48, 28, 40, .55); --glass-line: rgba(233, 210, 166, .28); --bg-2: rgba(255, 255, 255, .06);
+  --fg: var(--night-fg); --muted: var(--night-muted); --moss: #C9DCAE; --petal-ink: #F7B9CE; --line: rgba(248, 236, 230, .15);
+  --glass: rgba(32, 46, 28, .55); --glass-line: rgba(233, 210, 166, .28); --bg-2: rgba(255, 255, 255, .06);
 }
+.custom::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: url("images/wash.svg") center / cover no-repeat; opacity: .32; mix-blend-mode: screen; }
 .custom .garden { opacity: .9; }
 .custom-in { max-width: 1280px; margin: 0 auto; padding-block: clamp(4rem, 9vw, 8rem); display: grid; gap: 2.6rem; }
 .custom .h2 em { color: var(--gold-hi); }

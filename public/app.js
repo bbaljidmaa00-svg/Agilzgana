@@ -79,8 +79,8 @@
     const night = !!opts.night;
     const TAU = Math.PI * 2;
     function recolor() {
-      col = night ? "#F8ECE6" : css("--petal");
-      col2 = night ? "#E9D2A6" : css("--gold");
+      col = night ? "#DCE8C8" : css("--moss");      // vines are leaf green
+      col2 = night ? "#F4B9CC" : css("--petal");    // flowers, glow and sparkles are rose
     }
     function rnd(a, b) { return a + Math.random() * (b - a); }
     function ribbon(x, y, a, len, dir, delay, nLoops) {
@@ -187,7 +187,7 @@
       const tw = 0.86 + 0.14 * Math.sin(time * d.sp + d.tw);
       ctx.save(); ctx.translate(d.x, d.y); ctx.rotate(d.rot);
       ctx.globalAlpha = alpha * Math.min(1, g * 1.6) * (night ? 0.85 : 0.9);
-      ctx.strokeStyle = d.gold ? col2 : col; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 1.2;
+      ctx.strokeStyle = d.gold || d.kind === "flower" ? col2 : col; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 1.2;
       if (d.kind === "sparkle" || d.kind === "bigSparkle") { ctx.scale(pop * tw, pop * tw); sparkle(d.r, d.kind === "bigSparkle" ? 1.7 : 1); }
       else if (d.kind === "dot") { ctx.beginPath(); ctx.arc(0, 0, d.r * pop * tw, 0, TAU); ctx.stroke(); }
       else if (d.kind === "rings") {
