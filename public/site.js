@@ -14,7 +14,7 @@ window.AGZSite = (() => {
     ["sizes", "#sizes", "Хэмжээний заавар"], ["story", "#story", "Тухай"], ["foot", ".foot", "Хөл хэсэг"]
   ];
   const FONT_ROLES = {
-    logo: ["--f-logo", "cursive"], serif: ["--f-serif", "Georgia, serif"],
+    logo: ["Princess Sofia", "Ingrid Darling", "Ole", "Lavishly Yours", "Fleur De Leah", "Love Light", "Rouge Script", "Twinkle Star", "Puppies Play", "Italianno", "Great Vibes", "Pinyon Script", "Alex Brush", "Cormorant Garamond", "Playfair Display"],
     script: ["--f-script", "Georgia, serif"], tech: ["--f-tech", "system-ui, sans-serif"]
   };
   const COLORS = ["bg", "fg", "petal", "petal-ink", "moss", "gold"];

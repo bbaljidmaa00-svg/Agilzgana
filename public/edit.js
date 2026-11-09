@@ -4,7 +4,7 @@
   const S = window.AGZSite, A = window.AGZ;
   const $ = (s, r = document) => r.querySelector(s);
   const esc = A.esc;
-  const DEFAULT_FONT = { logo: "Italianno", serif: "Cormorant Garamond", script: "Cormorant Garamond", tech: "Exo 2" };
+  const DEFAULT_FONT = { logo: "Princess Sofia", serif: "Cormorant Garamond", script: "Cormorant Garamond", tech: "Exo 2" };
   const ROLE_NAME = { logo: "Лого", serif: "Гарчиг, үндсэн бичвэр", script: "Онцолсон налуу үг", tech: "Цэс, товч, жижиг гарчиг" };
   const COLOR_NAME = { bg: "Арын өнгө", fg: "Бичгийн өнгө", petal: "Ягаан (лого, товч)", "petal-ink": "Тод ягаан (онцлох үг)", moss: "Ногоон (хээ, навч)", gold: "Алтан" };
 
