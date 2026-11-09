@@ -33,7 +33,7 @@ export default {
       if (!handler) return json({ error: "Method not allowed" }, 405);
       const params = param ? { [param]: decodeURIComponent(m[1]) } : {};
       try { return await handler({ request, env, params, ctx }); }
-      catch (e) { return json({ error: "Серверийн алдаа: " + (e && e.message) }, 500); }
+      catch (e) { console.error(e); return json({ error: "Серверийн алдаа гарлаа. Дахин оролдоно уу." }, 500); }
     }
     return json({ error: "Олдсонгүй" }, 404);
   }

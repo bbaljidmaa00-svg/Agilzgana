@@ -1,0 +1,26 @@
+/* Legal pages (privacy, terms, cookies, refund, business info): plain, readable, same palette as the shop. */
+body.legal { font-size: 1.12rem; }
+body.legal::after { opacity: .35; }
+.legal-head, .legal-main, .legal-foot { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding-inline: 16px; }
+.legal-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1rem; flex-wrap: wrap; }
+.legal-head .back { font: 500 .86rem var(--f-tech); color: var(--fg); }
+.legal-main { padding-block: 1rem 3rem; }
+.legal-main h1 { font-family: var(--f-script); font-style: italic; font-weight: 600; font-size: clamp(2.2rem, 1.6rem + 2vw, 3rem); line-height: 1.15; color: var(--petal-ink); margin: .5rem 0 .2rem; }
+.legal-main h2 { font-family: var(--f-tech); font-weight: 600; font-size: 1.05rem; letter-spacing: .02em; margin: 2.2rem 0 .6rem; }
+.legal-main p, .legal-main li { line-height: 1.65; }
+.legal-main a { color: var(--petal-ink); }
+.legal-main code { font-size: .85em; }
+.updated { font: .82rem var(--f-tech); color: var(--muted); margin: 0 0 1.6rem; }
+.biz-list { list-style: none; padding: 1rem 1.2rem; margin: .6rem 0 1rem; background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; }
+.biz-list li { margin: .2rem 0; }
+.table-scroll { overflow-x: auto; margin: 1rem 0; }
+.table-scroll:focus-visible { outline: 2px solid var(--petal-ink); }
+.legal-main table { width: 100%; border-collapse: collapse; font: .9rem/1.5 var(--f-tech); min-width: 520px; }
+.legal-main caption { text-align: left; font-weight: 600; padding-bottom: .5rem; }
+.legal-main th, .legal-main td { text-align: left; vertical-align: top; padding: .55rem .6rem; border-bottom: 1px solid var(--line); }
+.legal-main thead th { color: var(--muted); font-weight: 500; }
+.biz-todo-inline { background: #FFE58A; color: #3D3A2C; padding: 0 .3em; border-radius: 4px; font: .9em var(--f-tech); }
+.legal-foot { border-top: 1px solid var(--line); padding-block: 1.4rem 2rem; font: .82rem var(--f-tech); color: var(--muted); }
+.legal-foot nav { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; }
+.legal-foot a { color: inherit; }
+.legal-foot a[aria-current="page"] { color: var(--fg); font-weight: 600; text-decoration: none; }

@@ -1,4 +1,4 @@
-import { db, json, bad, requireAdmin } from "../../lib/core.js";
+import { db, json, bad, requireAdmin, safeJSON } from "../../lib/core.js";
 const STATUSES = ["new", "making", "ready", "done", "cancelled"];
 
 export async function onRequestPatch({ request, params, env }) {
@@ -13,6 +13,12 @@ export async function onRequestPatch({ request, params, env }) {
 export async function onRequestDelete({ request, params, env }) {
   const denied = await requireAdmin(request, env); if (denied) return denied;
   const DB = await db(env);
+  // also remove the customer's reference photos, so deleting an order deletes all of their data
+  const row = await DB.prepare("SELECT images FROM orders WHERE id = ?").bind(params.id).first();
   await DB.prepare("DELETE FROM orders WHERE id = ?").bind(params.id).run();
+  if (row && env.IMAGES) {
+    const keys = safeJSON(row.images, []).map((u) => String(u).split("/").pop()).filter((k) => /^r-[\w-]+\.\w+$/.test(k));
+    await Promise.all(keys.map((k) => env.IMAGES.delete(k).catch(() => {})));
+  }
   return json({ ok: true });
 }

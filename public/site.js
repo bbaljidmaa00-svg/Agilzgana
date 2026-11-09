@@ -126,7 +126,8 @@ window.AGZSite = (() => {
       if (el.parentElement && el.parentElement.matches("a, button")) el.parentElement.after(el);
     });
     // fonts
-    const fams = Object.values(data.font).filter(okFont);
+    // the default fonts are self-hosted (fonts/fonts.css); only other fonts picked in the editor come from Google Fonts
+    const fams = Object.values(data.font).filter((f) => okFont(f) && !SELF_HOSTED.includes(f));
     if (fams.length) {
       fontLink = fontLink || document.head.appendChild(Object.assign(document.createElement("link"), { rel: "stylesheet" }));
       const href = "https://fonts.googleapis.com/css2?" + [...new Set(fams)].map((f) => "family=" + f.replace(/ /g, "+") + (FONT_AXES[f] ? ":" + FONT_AXES[f] : "")).join("&") + "&display=swap";
@@ -152,6 +153,7 @@ window.AGZSite = (() => {
     "Raleway": "ital,wght@0,300;0,400;0,500;0,600;1,400", "Inter": "wght@300;400;500;600", "Roboto": "ital,wght@0,300;0,400;0,500;1,400",
     "Rubik": "ital,wght@0,300;0,400;0,500;0,600;1,400", "Comfortaa": "wght@300;400;500;600", "Caveat": "wght@400;500;600;700"
   };
+  const SELF_HOSTED = ["Italianno", "Cormorant Garamond", "Exo 2"];
   const FONTS = {
     logo: ["Italianno", "Great Vibes", "Parisienne", "Pinyon Script", "Alex Brush", "Marck Script", "Lobster", "Cormorant Garamond", "Playfair Display"],
     serif: ["Cormorant Garamond", "Playfair Display", "Lora", "EB Garamond", "Prata", "PT Serif", "Noto Serif", "Spectral", "Philosopher"],
