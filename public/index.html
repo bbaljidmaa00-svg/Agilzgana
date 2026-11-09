@@ -10,13 +10,12 @@
 <meta property="og:description" content="Захиалгаар гараар урладаг, байгалиас сэдэвлэсэн үнэт эдлэл">
 <meta property="og:image" content="images/banner.jpg">
 <meta name="theme-color" content="#FBF7EF">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italianno&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600;1,700&family=Exo+2:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="fonts/fonts.css">
 <link rel="stylesheet" href="styles.css">
-<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("agz-theme");if(t)document.documentElement.setAttribute("data-theme",t);if(sessionStorage.getItem("agz-intro"))document.documentElement.classList.add("no-intro")}catch(e){}</script>
+<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("agz-theme");if(t)document.documentElement.setAttribute("data-theme",t);if(localStorage.getItem("agz-motion")==="off")document.documentElement.classList.add("calm","no-intro");if(sessionStorage.getItem("agz-intro"))document.documentElement.classList.add("no-intro")}catch(e){}</script>
 </head>
 <body>
+<a class="skip" href="#main">Үндсэн агуулга руу алгасах</a>
 
 <!-- Reusable hand-drawn ornaments: угалз flourish, flower bloom, star swirl, swan (generated line art, pathLength=1 for draw-in) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -53,14 +52,14 @@
       <button class="icon-btn" id="themeBtn" type="button" aria-label="Өдөр, шөнийн горим солих">
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
       </button>
-      <button class="bag-btn" id="bagBtn" type="button">
-        <span class="bag-label">Захиалга</span> <span class="bag-count" id="bagCount">0</span>
+      <button class="bag-btn" id="bagBtn" type="button" aria-haspopup="dialog" aria-label="Захиалгын жагсаалт нээх">
+        <span class="bag-label" aria-hidden="true">Захиалга</span> <span class="bag-count" id="bagCount" aria-hidden="true">0</span>
       </button>
     </div>
   </div>
 </header>
 
-<main id="main">
+<main id="main" tabindex="-1">
   <!-- scroll-drawn vine that runs down the whole page -->
   <svg class="page-vine" id="pageVine" aria-hidden="true" preserveAspectRatio="none"><path id="pageVinePath"/></svg>
 
@@ -101,8 +100,8 @@
       <span class="head-orn flourish" aria-hidden="true"></span>
       <p class="sub">Энд байгаа бүтээл бүрийг таны хэмжээгээр шинээр урлана. Өнгө, чулуу, уртыг нь хүссэнээрээ өөрчилж болно.</p>
     </div>
-    <div class="cats" id="cats" role="tablist" aria-label="Төрөл"></div>
-    <div class="grid" id="grid"></div>
+    <div class="cats" id="cats" role="group" aria-label="Төрлөөр шүүх"></div>
+    <div class="grid" id="grid" aria-live="polite"></div>
     <p class="note" id="exampleNote" hidden>Одоо харагдаж буй бүтээл, үнэ нь жишээ. Админ хуудаснаас жинхэнэ зураг, үнээ оруулахад солигдоно.</p>
   </section>
 
@@ -125,21 +124,25 @@
         <li><span class="p-num">3</span><h3>Урлал</h3><p>3–7 хоногт гараар урлана. Явцын зургийг илгээнэ.</p></li>
         <li><span class="p-num">4</span><h3>Хүргэлт</h3><p>Бэлгийн боодолтой хүргэж өгнө.</p></li>
       </ol>
-      <form class="custom-form glass" id="customForm" novalidate>
+      <form class="custom-form glass" id="customForm" novalidate aria-describedby="cReqNote">
+        <p class="form-note" id="cReqNote"><span class="req" aria-hidden="true">*</span> тэмдэгтэй талбарыг заавал бөглөнө.</p>
         <div class="cf-grid">
           <div class="field"><label for="cCat">Юу хийлгэх вэ?</label><select id="cCat"></select></div>
           <div class="field"><label for="cSize">Хэмжээ <span class="opt">(мэдэж байвал)</span></label><input id="cSize" placeholder="Жишээ нь: размер 17, бугуй 15 см"></div>
-          <div class="field span2"><label for="cIdea">Санаагаа бичээрэй</label><textarea id="cIdea" rows="3" placeholder="Жишээ нь: навчны хээтэй, жижиг ногоон чулуутай, нимгэн мөнгөн бөгж"></textarea></div>
-          <div class="field"><label for="cBudget">Төсөв</label>
+          <div class="field span2"><label for="cIdea" class="is-req">Санаагаа бичээрэй</label><textarea id="cIdea" rows="3" aria-required="true" aria-describedby="cErr" placeholder="Жишээ нь: навчны хээтэй, жижиг ногоон чулуутай, нимгэн мөнгөн бөгж"></textarea></div>
+          <div class="field"><label for="cBudget" class="is-opt">Төсөв</label>
             <select id="cBudget"><option value="">Сонгох</option><option>50 000₮ хүртэл</option><option>50–100 000₮</option><option>100–200 000₮</option><option>200 000₮-аас дээш</option></select></div>
           <div class="field"><label for="cFiles">Санаа өгсөн зураг <span class="opt">(3 хүртэл)</span></label>
-            <label class="drop" for="cFiles"><input id="cFiles" type="file" accept="image/*" multiple><span>Зураг сонгох</span></label>
+            <label class="drop" for="cFiles"><input id="cFiles" type="file" accept="image/*" multiple aria-describedby="cFilesHelp"><span>Зураг сонгох</span></label>
+            <p class="help" id="cFilesHelp">Өөрийн авсан эсвэл ашиглах эрхтэй зургаа л илгээнэ үү. Зураг дээр бусдын нүүр, хувийн мэдээлэл бүү оруулаарай.</p>
             <div class="thumbs" id="cThumbs"></div></div>
-          <div class="field"><label for="cName">Нэр</label><input id="cName" autocomplete="name"></div>
-          <div class="field"><label for="cPhone">Утас</label><input id="cPhone" type="tel" inputmode="tel" autocomplete="tel"></div>
+          <div class="field"><label for="cName" class="is-req">Нэр</label><input id="cName" autocomplete="name" aria-required="true" aria-describedby="cErr"></div>
+          <div class="field"><label for="cPhone" class="is-req">Утас</label><input id="cPhone" type="tel" inputmode="tel" autocomplete="tel" aria-required="true" aria-describedby="cErr"></div>
           <div class="field span2"><label for="cIg">Instagram хаяг <span class="opt">(заавал биш)</span></label><input id="cIg" placeholder="@"></div>
           <input class="hp" id="cWebsite" tabindex="-1" autocomplete="off" aria-hidden="true">
         </div>
+        <label class="consent" for="cConsent"><input type="checkbox" id="cConsent" aria-required="true" aria-describedby="cErr cConsentMore"><span>Миний нэр, утас, Instagram хаяг, санаа, зургийг <span data-biz="shortName"></span> энэ хүсэлтэд хариулах, захиалга хийх зорилгоор боловсруулж, гадаадад байрлах Cloudflare серверт хадгалахыг зөвшөөрч байна. <span class="req" aria-hidden="true">*</span></span></label>
+        <p class="form-note" id="cConsentMore">Хадгалах хугацаа, хэнд дамжих, зөвшөөрлөө хэрхэн цуцлах тухай: <a href="privacy.html" target="_blank">Нууцлалын бодлого<span class="sr-only"> (шинэ цонхонд)</span></a>.</p>
         <p class="err" id="cErr" role="alert"></p>
         <button class="btn primary wide" type="submit"><span>Санаагаа илгээх</span></button>
       </form>
@@ -150,7 +153,7 @@
         <pre class="order-text" id="customText"></pre>
         <div class="sent-actions">
           <button class="btn ghost" type="button" id="customCopy"><span>Текст хуулах</span></button>
-          <a class="btn primary" id="customDm" href="https://ig.me/m/agilzgana_" target="_blank" rel="noopener"><span>Instagram-аар бичих</span></a>
+          <a class="btn primary" id="customDm" aria-describedby="newWin" href="https://ig.me/m/agilzgana_" target="_blank" rel="noopener"><span>Instagram-аар бичих</span></a>
         </div>
         <p class="hint" id="customHint" role="status"></p>
       </div>
@@ -185,7 +188,7 @@
   <section class="story" id="story" aria-labelledby="storyTitle">
     <figure class="story-photo">
       <span class="frame-orn tl flourish" aria-hidden="true"></span>
-      <img src="images/banner.jpg" alt="Agilzgana брэндийн баннер: модны сүүдэрт, нуурын эрэг дээр амарч буй хүн" loading="lazy" width="1080" height="796">
+      <img src="images/banner.jpg" alt="Agilzgana гэсэн ягаан бичигтэй баннер: модны сүүдэрт, нуурын эргийн зүлгэн дээр сууж буй хүн, эрвээхэй, одны чимэглэлтэй" loading="lazy" width="1080" height="796">
       <span class="frame-orn br flourish" aria-hidden="true"></span>
     </figure>
     <div class="story-text">
@@ -194,7 +197,7 @@
       <h2 id="storyTitle" class="h2">Модны сүүдэрт <em>төрсөн</em> чимэглэл</h2>
       <p>Agilzgana гэдэг нь зугаалга, амралт гэсэн утгатай. Байгальд алхаж явахдаа анзаарсан жижиг зүйлс болох навчны судал, усны гялбаа, эрвээхэйн далавчийг утас, чулуу, гинжээр дахин бүтээдэг.</p>
       <p>Бүтээл бүр захиалгаар, гараар хийгдэх тул хоёр яг ижил бүтээл гарахгүй. Захиалга өгснөөс хойш ойролцоогоор 3–7 хоногт бэлэн болно.</p>
-      <a class="btn ghost" href="https://www.instagram.com/agilzgana_/" target="_blank" rel="noopener"><span>Instagram дээр үзэх</span></a>
+      <a class="btn ghost" href="https://www.instagram.com/agilzgana_/" target="_blank" rel="noopener" aria-describedby="newWin"><span>Instagram дээр үзэх</span></a>
     </div>
   </section>
 </main>
@@ -204,8 +207,18 @@
   <div class="foot-in">
     <span class="brand small">Agilzgana</span>
     <span>Захиалгаар гараар урласан үнэт эдлэл · Улаанбаатар</span>
-    <a href="https://www.instagram.com/agilzgana_/" target="_blank" rel="noopener">@agilzgana_</a>
+    <a href="https://www.instagram.com/agilzgana_/" target="_blank" rel="noopener" aria-describedby="newWin">@agilzgana_</a>
   </div>
+  <span class="sr-only" id="newWin">Шинэ цонхонд нээгдэнэ</span>
+  <nav class="foot-legal" aria-label="Хууль, эрх зүйн мэдээлэл">
+    <a href="terms.html">Үйлчилгээний нөхцөл</a>
+    <a href="privacy.html">Нууцлалын бодлого</a>
+    <a href="cookies.html">Күүки бодлого</a>
+    <a href="refund.html">Буцаалт, солилт</a>
+    <a href="about-business.html">Бизнесийн мэдээлэл</a>
+    <button type="button" id="motionBtn" aria-pressed="false">Хөдөлгөөн зогсоох</button>
+    <span class="foot-biz">© <span data-year>2026</span> <span data-biz="legalName"></span> · <span data-biz="regLabel"></span></span>
+  </nav>
 </footer>
 
 <!-- PRODUCT PANEL -->
@@ -228,9 +241,9 @@
       <div class="field">
         <label for="pQty">Тоо ширхэг</label>
         <div class="qty">
-          <button type="button" id="qtyMinus" aria-label="Хасах">−</button>
+          <button type="button" id="qtyMinus" aria-label="Тоог нэгээр хасах">−</button>
           <input id="pQty" type="number" min="1" max="20" value="1" inputmode="numeric">
-          <button type="button" id="qtyPlus" aria-label="Нэмэх">+</button>
+          <button type="button" id="qtyPlus" aria-label="Тоог нэгээр нэмэх">+</button>
         </div>
       </div>
       <div class="field">
@@ -238,7 +251,7 @@
         <textarea id="pNote" rows="2" placeholder="Өнгө, чулуу, урт, бэлгийн боодол гэх мэт"></textarea>
       </div>
       <p class="err" id="pErr" role="alert"></p>
-      <button class="btn primary wide" type="submit"><span>Захиалгад нэмэх</span></button>
+      <button class="btn primary wide" type="submit"><span>Захиалгын жагсаалтад нэмэх</span></button>
     </form>
   </div>
 </section>
@@ -251,24 +264,29 @@
   <p class="bag-empty" id="bagEmpty">Одоогоор хоосон байна. Цуглуулгаас сонгоод хэмжээгээ оруулаарай.</p>
   <p class="bag-total" id="bagTotal"></p>
   <form class="order-form" id="orderForm" novalidate>
-    <div class="field"><label for="oName">Нэр</label><input id="oName" autocomplete="name"></div>
-    <div class="field"><label for="oPhone">Утас</label><input id="oPhone" type="tel" autocomplete="tel" inputmode="tel"></div>
+    <p class="form-note"><span class="req" aria-hidden="true">*</span> тэмдэгтэй талбарыг заавал бөглөнө.</p>
+    <div class="field"><label for="oName">Нэр <span class="req" aria-hidden="true">*</span></label><input id="oName" autocomplete="name" aria-required="true" aria-describedby="oErr"></div>
+    <div class="field"><label for="oPhone">Утас <span class="req" aria-hidden="true">*</span></label><input id="oPhone" type="tel" autocomplete="tel" inputmode="tel" aria-required="true" aria-describedby="oErr"></div>
     <div class="field"><label for="oIg">Instagram хаяг <span class="opt">(заавал биш)</span></label><input id="oIg" placeholder="@"></div>
-    <div class="field"><label for="oAddr">Хүргэлтийн хаяг эсвэл авах газар</label><textarea id="oAddr" rows="2"></textarea></div>
+    <div class="field"><label for="oAddr">Хүргэлтийн хаяг эсвэл авах газар <span class="req" aria-hidden="true">*</span></label><textarea id="oAddr" rows="2" autocomplete="street-address" aria-required="true" aria-describedby="oErr"></textarea></div>
+    <label class="consent" for="oTerms"><input type="checkbox" id="oTerms" aria-required="true" aria-describedby="oErr"><span><a href="terms.html" target="_blank">Үйлчилгээний нөхцөл<span class="sr-only"> (шинэ цонхонд)</span></a>, <a href="refund.html" target="_blank">Буцаалтын бодлого<span class="sr-only"> (шинэ цонхонд)</span></a>-той танилцсан. Захиалгаар хийсэн бүтээлийг ихэвчлэн буцаах боломжгүйг ойлгосон. <span class="req" aria-hidden="true">*</span></span></label>
+    <label class="consent" for="oConsent"><input type="checkbox" id="oConsent" aria-required="true" aria-describedby="oErr oConsentMore"><span>Миний нэр, утас, хаяг, Instagram хаягийг <span data-biz="shortName"></span> захиалгыг биелүүлэх, хүргэх зорилгоор боловсруулж, гадаадад байрлах Cloudflare серверт хадгалахыг зөвшөөрч байна. <span class="req" aria-hidden="true">*</span></span></label>
+    <p class="form-note" id="oConsentMore">Хадгалах хугацаа, хэнд дамжих, зөвшөөрлөө хэрхэн цуцлах тухай: <a href="privacy.html" target="_blank">Нууцлалын бодлого<span class="sr-only"> (шинэ цонхонд)</span></a>.</p>
     <p class="err" id="oErr" role="alert"></p>
-    <button class="btn primary wide" type="submit"><span>Захиалга илгээх</span></button>
+    <button class="btn primary wide" type="submit"><span>Захиалгын хүсэлт илгээх</span></button>
   </form>
   <div class="sent" id="sentBox" hidden>
     <p class="sent-lede" id="sentLede"></p>
     <pre class="order-text" id="orderText"></pre>
     <div class="sent-actions">
       <button class="btn ghost" type="button" id="copyBtn"><span>Текст хуулах</span></button>
-      <a class="btn primary" id="dmLink" href="https://ig.me/m/agilzgana_" target="_blank" rel="noopener"><span>Instagram-аар илгээх</span></a>
+      <a class="btn primary" id="dmLink" href="https://ig.me/m/agilzgana_" target="_blank" rel="noopener"><span>Instagram-аар илгээх<span class="sr-only"> (шинэ цонхонд нээгдэнэ)</span></span></a>
     </div>
     <p class="hint" id="copyHint" role="status"></p>
   </div>
 </aside>
 
+<script src="business.js"></script>
 <script src="shared.js"></script>
 <script src="site.js"></script>
 <script src="app.js"></script>

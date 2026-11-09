@@ -267,6 +267,7 @@
           <select class="o-status" data-id="${o.id}" data-s="${o.status}" aria-label="Төлөв">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${k === o.status ? "selected" : ""}>${v}</option>`).join("")}</select>
         </div>
         <div class="o-cust"><strong>${esc(c.name)}</strong><a href="tel:${esc(c.phone)}">${esc(c.phone)}</a>${ig ? `<a href="https://instagram.com/${esc(ig)}" target="_blank" rel="noopener">@${esc(ig)}</a>` : ""}${c.address ? `<span>${esc(c.address)}</span>` : ""}</div>
+        <p class="o-items sz">${c.consent ? `Зөвшөөрөл өгсөн: ${esc(when(String(c.consent.at).slice(0, 19).replace("T", " ")))}${c.consent.version ? " (бодлого " + esc(c.consent.version) + ")" : ""}` : "Зөвшөөрлийн бүртгэлгүй (хуучин захиалга)"}</p>
         ${body}
         ${o.images?.length ? `<div class="o-imgs">${o.images.map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener"><img src="${esc(u)}" alt="Санааны зураг"></a>`).join("")}</div>` : ""}
         <div class="o-foot"><span>${o.total ? money(o.total) : ""}</span><button class="o-del" type="button" data-id="${o.id}">Устгах</button></div>

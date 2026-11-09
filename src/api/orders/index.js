@@ -12,6 +12,11 @@ export async function onRequestPost({ request, env }) {
   const customer = { name: s(c.name, 80), phone: s(c.phone, 30), instagram: s(c.instagram, 60), address: s(c.address, 300) };
   if (!customer.name || !customer.phone) return bad("Нэр, утас заавал");
   if (s(b.website, 50)) return json({ ok: true, id: 0 }); // honeypot
+  // consent is required (Law on Personal Data Protection); keep a record of what was agreed and when
+  const cs = b.consent || {};
+  if (cs.privacy !== true) return bad("Хувийн мэдээллээ боловсруулахыг зөвшөөрөх шаардлагатай.");
+  if (kind === "order" && cs.terms !== true) return bad("Үйлчилгээний нөхцөл, буцаалтын бодлоготой танилцсанаа тэмдэглэнэ үү.");
+  customer.consent = { privacy: true, terms: kind === "order", version: s(cs.version, 20), at: new Date().toISOString() };
 
   let items = [], total = 0;
   if (kind === "order") {

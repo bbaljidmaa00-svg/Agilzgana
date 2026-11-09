@@ -7,7 +7,9 @@
     get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
   };
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // motion stops for visitors who ask their device for less motion, or who press "Хөдөлгөөн зогсоох" in the footer
+  const calm = document.documentElement.classList.contains("calm");
+  const reduce = calm || matchMedia("(prefers-reduced-motion: reduce)").matches;
   const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
   let PRODUCTS = [];
@@ -15,6 +17,21 @@
   let bag = store.get("agz-bag", []);
   let current = null;
   let activeCat = "all";
+
+  /* ---------- pause / resume motion (WCAG 2.2.2) ---------- */
+  {
+    const mb = $("#motionBtn");
+    if (mb) {
+      mb.setAttribute("aria-pressed", calm);
+      mb.textContent = calm ? "Хөдөлгөөн эхлүүлэх" : "Хөдөлгөөн зогсоох";
+      mb.addEventListener("click", () => {
+        try { calm ? localStorage.removeItem("agz-motion") : localStorage.setItem("agz-motion", "off"); } catch {}
+        location.reload();
+      });
+    }
+  }
+  // details typed into the forms are no longer remembered on the device (data minimisation); clear older copies
+  try { localStorage.removeItem("agz-customer"); } catch {}
 
   /* ---------- intro ---------- */
   try { sessionStorage.setItem("agz-intro", "1"); } catch {}
@@ -296,12 +313,13 @@
   function renderCats() {
     // "Онцлох" (the pieces marked featured in admin) leads, every category follows, "Бүгд" comes last
     const all = [...(PRODUCTS.some((p) => p.featured) ? [{ id: "featured", name: "Онцлох" }] : []), ...CATEGORIES, { id: "all", name: "Бүгд" }];
-    $("#cats").innerHTML = all.map((c) => `<button class="cat" role="tab" type="button" data-cat="${c.id}" aria-selected="${c.id === activeCat}">${esc(c.name)}</button>`).join("");
+    $("#cats").innerHTML = all.map((c) => `<button class="cat" type="button" data-cat="${c.id}" aria-pressed="${c.id === activeCat}">${esc(c.name)}</button>`).join("");
   }
-  $("#cats").addEventListener("click", (e) => { const b = e.target.closest(".cat"); if (!b) return; activeCat = b.dataset.cat; renderCats(); renderGrid(true); });
+  $("#cats").addEventListener("click", (e) => { const b = e.target.closest(".cat"); if (!b) return; activeCat = b.dataset.cat; renderCats(); renderGrid(true); const nb = $(`.cat[data-cat="${activeCat}"]`); nb && nb.focus(); });
 
+  // card and order-list photos sit next to the piece's name, so they are decorative (alt="") to avoid reading the name twice
   const media = (p, i = 0) => p.images && p.images[i]
-    ? `<img src="${esc(p.images[i])}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
+    ? `<img src="${esc(p.images[i])}" alt="" loading="lazy" decoding="async">`
     : art(p.category, PRODUCTS.indexOf(p) + 2);
 
   function renderGrid(animate) {
@@ -314,6 +332,7 @@
         </span>
         <span class="card-cat">${esc(catOf(p.category).name)}</span>
         <span class="card-row"><span class="card-name">${esc(p.name)}</span><span class="card-price">${priceText(p.price, true)}</span></span>
+        <span class="sr-only">, дэлгэрэнгүй үзэх</span>
       </button>`).join("")
       : `<p class="empty">Энэ төрөлд одоогоор бүтээл алга. <a href="#custom">Өөрийн санаагаар захиалаарай.</a></p>`;
     $("#exampleNote").hidden = !PRODUCTS.some((p) => p.isExample);
@@ -401,14 +420,15 @@
 
   /* ---------- product panel ---------- */
   function showImage(p, i) {
-    $("#pMain").innerHTML = p.images && p.images.length ? `<img src="${esc(p.images[i])}" alt="${esc(p.name)}">` : art(p.category, PRODUCTS.indexOf(p) + 2);
+    const n = (p.images || []).length;
+    $("#pMain").innerHTML = n ? `<img src="${esc(p.images[i])}" alt="${esc(`${p.name}, ${catOf(p.category).name}${n > 1 ? `, зураг ${i + 1}/${n}` : ""}`)}">` : art(p.category, PRODUCTS.indexOf(p) + 2);
     $$("#pThumbs button").forEach((b, k) => b.setAttribute("aria-current", k === i));
   }
   function openProduct(id) {
     const p = PRODUCTS.find((x) => x.id === id); if (!p) return;
     current = p;
     const c = catOf(p.category);
-    $("#pThumbs").innerHTML = (p.images || []).length > 1 ? p.images.map((src, i) => `<button type="button" data-i="${i}" aria-label="Зураг ${i + 1}"><img src="${esc(src)}" alt=""></button>`).join("") : "";
+    $("#pThumbs").innerHTML = (p.images || []).length > 1 ? p.images.map((src, i) => `<button type="button" data-i="${i}" aria-label="${i + 1}-р зургийг харах"><img src="${esc(src)}" alt=""></button>`).join("") : "";
     showImage(p, 0);
     $("#pCat").textContent = c.name;
     $("#pName").textContent = p.name;
@@ -437,6 +457,7 @@
   function updateCount(bump) {
     const n = bag.reduce((a, b) => a + b.qty, 0);
     const el = $("#bagCount"); el.textContent = n;
+    $("#bagBtn").setAttribute("aria-label", `Захиалгын жагсаалт нээх, ${n} бүтээл`);
     if (bump) { el.classList.add("bump"); setTimeout(() => el.classList.remove("bump"), 450); }
   }
   function bagItems() { return bag.map((b, i) => ({ ...b, i, p: PRODUCTS.find((x) => x.id === b.id) })).filter((b) => b.p); }
@@ -446,11 +467,11 @@
       <li class="bag-item">
         <span class="bag-thumb">${media(b.p)}</span>
         <span><h4>${esc(b.p.name)}</h4><span class="bag-meta">${esc(catOf(b.p.category).name)}${b.size ? " · " + esc(b.size) : ""} · ${b.qty} ш${b.note ? "<br>" + esc(b.note) : ""}</span></span>
-        <button class="rm" type="button" data-i="${b.i}">Хасах</button>
+        <button class="rm" type="button" data-i="${b.i}" aria-label="${esc(b.p.name)}-г жагсаалтаас хасах">Хасах</button>
       </li>`).join("");
     const total = items.reduce((a, b) => a + b.p.price * b.qty, 0);
     $("#bagEmpty").hidden = items.length > 0;
-    $("#bagTotal").textContent = items.length ? "Нийт: " + money(total) + (items.some((b) => !b.p.price) ? " + үнэ тохиролцох бүтээл" : "") : "";
+    $("#bagTotal").textContent = !items.length ? "" : !total ? "Нийт: үнэ тохиролцоно" : "Нийт: " + money(total) + (items.some((b) => !b.p.price) ? " + үнэ тохиролцох бүтээл" : "");
     $("#orderForm").hidden = !items.length;
     $("#sentBox").hidden = true;
     return { items, total };
@@ -459,9 +480,14 @@
   function openBag() { renderBag(); show($("#bagPanel")); }
   $("#bagBtn").addEventListener("click", openBag);
 
-  const saved = store.get("agz-customer", {});
-  const fill = (ids) => ids.forEach(([id, k]) => { if (saved[k] && $("#" + id)) $("#" + id).value = saved[k]; });
-  fill([["oName", "name"], ["oPhone", "phone"], ["oIg", "instagram"], ["oAddr", "address"], ["cName", "name"], ["cPhone", "phone"], ["cIg", "instagram"]]);
+  /* form errors: show the message, mark the field invalid and move focus to it */
+  function fail(errEl, msg, field) {
+    errEl.textContent = msg;
+    if (field) { field.setAttribute("aria-invalid", "true"); field.focus(); }
+  }
+  function clearInvalid(form) { $$("[aria-invalid]", form).forEach((f) => f.removeAttribute("aria-invalid")); }
+  // the version of the policies the visitor agreed to, saved with the order as a record of consent
+  const POLICY_VERSION = (window.AGZ_BUSINESS && window.AGZ_BUSINESS.policyDate) || "";
 
   const phoneOk = (v) => /^[+\d][\d\s-]{6,}$/.test(v);
   function copyText(el, hint) {
@@ -474,15 +500,18 @@
   $("#orderForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const c = { name: $("#oName").value.trim(), phone: $("#oPhone").value.trim(), instagram: $("#oIg").value.trim(), address: $("#oAddr").value.trim() };
-    if (!c.name || !c.phone || !c.address) { $("#oErr").textContent = "Нэр, утас, хаягаа бөглөнө үү."; return; }
-    if (!phoneOk(c.phone)) { $("#oErr").textContent = "Утасны дугаараа шалгана уу."; return; }
+    const form = $("#orderForm"); clearInvalid(form);
+    if (!c.name) return fail($("#oErr"), "Нэрээ бичнэ үү.", $("#oName"));
+    if (!phoneOk(c.phone)) return fail($("#oErr"), "Утасны дугаараа зөв оруулна уу.", $("#oPhone"));
+    if (!c.address) return fail($("#oErr"), "Хүргэлтийн хаяг эсвэл авах газраа бичнэ үү.", $("#oAddr"));
+    if (!$("#oTerms").checked) return fail($("#oErr"), "Үйлчилгээний нөхцөл, буцаалтын бодлоготой танилцсанаа тэмдэглэнэ үү.", $("#oTerms"));
+    if (!$("#oConsent").checked) return fail($("#oErr"), "Мэдээллээ боловсруулахыг зөвшөөрөхгүй бол захиалгыг хүлээн авах боломжгүй.", $("#oConsent"));
     $("#oErr").textContent = "";
-    store.set("agz-customer", { ...store.get("agz-customer", {}), ...c });
     const { items, total } = renderBag();
     const btn = $("#orderForm button[type=submit]"); btn.disabled = true;
     let id = null;
     if (LIVE) {
-      try { id = (await api("/api/orders", { method: "POST", body: JSON.stringify({ kind: "order", customer: c, items: items.map((b) => ({ id: b.id, qty: b.qty, size: b.size, note: b.note })) }) })).id; } catch {}
+      try { id = (await api("/api/orders", { method: "POST", body: JSON.stringify({ kind: "order", customer: c, consent: { privacy: true, terms: true, version: POLICY_VERSION }, items: items.map((b) => ({ id: b.id, qty: b.qty, size: b.size, note: b.note })) }) })).id; } catch {}
     }
     btn.disabled = false;
     const lines = items.map((b, n) => `${n + 1}. ${b.p.name} (${catOf(b.p.category).name})${b.size ? " · " + b.size : ""} · ${b.qty} ш · ${b.p.price ? money(b.p.price * b.qty) : "үнэ тохиролцоно"}${b.note ? "\n   Тэмдэглэл: " + b.note : ""}`);
@@ -491,6 +520,7 @@
       ? `Захиалга №${id} бүртгэгдлээ! Баталгаажуулахын тулд доорх текстийг Instagram-аар илгээнэ үү.`
       : "Захиалгын мэдээлэл бэлэн боллоо. Доорх текстийг хуулаад Instagram-аар илгээнэ үү.";
     $("#orderForm").hidden = true; $("#sentBox").hidden = false; $("#copyHint").textContent = "";
+    $("#sentLede").setAttribute("tabindex", "-1"); $("#sentLede").focus();
     if (id) { bag = []; store.set("agz-bag", bag); updateCount(); }
   });
   $("#copyBtn").addEventListener("click", () => copyText($("#orderText"), $("#copyHint")));
@@ -503,23 +533,25 @@
     e.target.value = ""; drawThumbs();
   });
   function drawThumbs() {
-    $("#cThumbs").innerHTML = refFiles.map((f, i) => `<figure><img src="${URL.createObjectURL(f)}" alt=""><button type="button" data-i="${i}" aria-label="Хасах">×</button></figure>`).join("");
+    $("#cThumbs").innerHTML = refFiles.map((f, i) => `<figure><img src="${URL.createObjectURL(f)}" alt=""><button type="button" data-i="${i}" aria-label="${i + 1}-р зургийг хасах">×</button></figure>`).join("");
   }
   $("#cThumbs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; refFiles.splice(+b.dataset.i, 1); drawThumbs(); });
   $("#customForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const c = { name: $("#cName").value.trim(), phone: $("#cPhone").value.trim(), instagram: $("#cIg").value.trim() };
     const r = { category: $("#cCat").value, size: $("#cSize").value.trim(), budget: $("#cBudget").value, idea: $("#cIdea").value.trim() };
-    if (!r.idea) { $("#cErr").textContent = "Санаагаа товч бичээрэй."; return; }
-    if (!c.name || !phoneOk(c.phone)) { $("#cErr").textContent = "Нэр, утасны дугаараа зөв оруулна уу."; return; }
+    const form = $("#customForm"); clearInvalid(form);
+    if (!r.idea) return fail($("#cErr"), "Санаагаа товч бичээрэй.", $("#cIdea"));
+    if (!c.name) return fail($("#cErr"), "Нэрээ бичнэ үү.", $("#cName"));
+    if (!phoneOk(c.phone)) return fail($("#cErr"), "Утасны дугаараа зөв оруулна уу.", $("#cPhone"));
+    if (!$("#cConsent").checked) return fail($("#cErr"), "Мэдээллээ боловсруулахыг зөвшөөрөхгүй бол хүсэлтийг хүлээн авах боломжгүй.", $("#cConsent"));
     $("#cErr").textContent = "";
-    store.set("agz-customer", { ...store.get("agz-customer", {}), ...c });
     const btn = $("#customForm button[type=submit]"); btn.disabled = true; btn.querySelector("span").textContent = "Илгээж байна…";
     let id = null, images = [];
     if (LIVE) {
       try {
         for (const f of refFiles) images.push((await upload(f, 1400)).url);
-        id = (await api("/api/orders", { method: "POST", body: JSON.stringify({ kind: "custom", customer: c, request: r, images, website: $("#cWebsite").value }) })).id;
+        id = (await api("/api/orders", { method: "POST", body: JSON.stringify({ kind: "custom", customer: c, consent: { privacy: true, version: POLICY_VERSION }, request: r, images, website: $("#cWebsite").value }) })).id;
       } catch (err) { console.warn(err); }
     }
     btn.disabled = false; btn.querySelector("span").textContent = "Санаагаа илгээх";
@@ -529,6 +561,7 @@
       ? `Таны санаа (№${id}) надад ирлээ${images.length ? ", зурагтайгаа" : ""}. Удахгүй холбогдоно. Хурдан хариу авах бол доорх текстийг Instagram-аар илгээгээрэй.`
       : "Доорх текстийг хуулаад Instagram-аар илгээгээрэй, хамтдаа ноорог гаргая.";
     $("#customForm").hidden = true; $("#customDone").hidden = false; $("#customHint").textContent = "";
+    $("#customDoneText").setAttribute("tabindex", "-1"); $("#customDoneText").focus({ preventScroll: true });
     $("#customDone").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
   });
   $("#customCopy").addEventListener("click", () => copyText($("#customText"), $("#customHint")));
@@ -541,11 +574,14 @@
     lastFocus = document.activeElement;
     $("#veil").hidden = false; panel.hidden = false;
     document.body.style.overflow = "hidden";
+    // the page behind an open panel cannot be reached by keyboard or screen reader
+    $$("body > header, body > main, body > footer, .skip").forEach((el) => { el.inert = true; });
     const f = panel.querySelector(".close"); f && f.focus({ preventScroll: true });
   }
   function hide() {
     $$(".panel").forEach((p) => (p.hidden = true));
     $("#veil").hidden = true; document.body.style.overflow = "";
+    $$("body > header, body > main, body > footer, .skip").forEach((el) => { el.inert = false; });
     lastFocus && lastFocus.focus && lastFocus.focus({ preventScroll: true });
   }
   function closeAll() {
@@ -555,7 +591,17 @@
   }
   $("#veil").addEventListener("click", closeAll);
   $$("[data-close]").forEach((b) => b.addEventListener("click", closeAll));
-  addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
+  addEventListener("keydown", (e) => {
+    if (e.key === "Escape") return closeAll();
+    // keep Tab inside an open panel (fallback for browsers without inert)
+    const open = $$(".panel").find((p) => !p.hidden);
+    if (e.key !== "Tab" || !open) return;
+    const f = $$("a[href], button:not([disabled]), input:not([type=hidden]):not([tabindex='-1']), select, textarea, [tabindex]:not([tabindex='-1'])", open).filter((el) => el.offsetParent !== null);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
   const route = () => { const h = location.hash.slice(1); if (h.startsWith("p-")) openProduct(h.slice(2)); };
   addEventListener("hashchange", route);
 
