@@ -491,6 +491,40 @@ svg use, svg g.orn { fill: none; stroke: color-mix(in srgb, var(--moss) 85%, var
 @media (max-width: 860px) { .d-size { left: auto; right: -10px; top: 0; width: 96px; opacity: .45; } }
 @media (max-width: 600px) { .hero .art { width: 132px; } .hero .art-tl { top: -6px; left: -6px; } }
 
+/* ---------- phones: calmer, smaller type and tighter spacing (images keep their size) ---------- */
+@media (max-width: 640px) {
+  :root { --step-0: 1.02rem; --step-1: 1.08rem; --step-2: 1.9rem; --step-hero: 4.4rem; }
+  body { line-height: 1.55; }
+  .nav-in { padding-block: .5rem; }
+  .brand { font-size: 2.05rem; }
+  .icon-btn, .bag-btn { height: 36px; } .icon-btn { width: 36px; }
+  .bag-count { min-width: 24px; height: 24px; font-size: .72rem; }
+  .hero { padding-block: 3.4rem 3.6rem; }
+  .logo-word { font-size: min(4.4rem, 19vw); }
+  .eyebrow { font-size: .66rem; letter-spacing: .2em; margin-bottom: .6rem; }
+  .lede { margin: 1rem 0 1.6rem; }
+  .sub { margin-top: .7rem; font-size: .98rem; }
+  .btn { height: 44px; font-size: .74rem; letter-spacing: .1em; padding: 0 1rem; }
+  .band { padding-block: .8rem; }
+  .band-track { font-size: 1.3rem; gap: 1.6rem; }
+  .collection, .sizes, .story { padding-block: 3rem; }
+  .custom-in { padding-block: 3rem; gap: 1.8rem; }
+  .section-head { margin-bottom: 1.6rem; }
+  .cats { gap: .4rem; }
+  .cat { font-size: .76rem; padding: .45rem .85rem; }
+  .card-name { font-size: 1.12rem; }
+  .card-price { font-size: .78rem; }
+  .card-cat { font-size: .6rem; letter-spacing: .16em; }
+  .process li { padding: .8rem 0; }
+  .process h3 { font-size: 1.25rem; }
+  .process p { font-size: .94rem; }
+  .steps li { font-size: .98rem; }
+  .field label, .field .label { font-size: .68rem; }
+  .field input, .field textarea, .field select { font-size: 1rem; padding: .6rem .85rem; }
+  .pp-name { font-size: 1.9rem; }
+  .bag-title { font-size: 1.8rem; }
+}
+
 /* ---------- content Baljka edits on the page (site.js) ---------- */
 .agz-hide { display: none !important; }
 .user-img { display: block; max-width: min(100%, 560px); height: auto; margin: 1.4rem auto; border-radius: 14px; }
